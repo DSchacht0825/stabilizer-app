@@ -5,13 +5,36 @@ exports.handler = async (event, context) => {
     };
 
     const searchTerm = event.queryStringParameters?.search || '';
+    const dateField = event.queryStringParameters?.dateField || 'created_at';
+    const dateFrom = event.queryStringParameters?.dateFrom || '';
+    const dateTo = event.queryStringParameters?.dateTo || '';
+    
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 
     try {
-        const query = searchTerm 
-            ? `or=("clientName".ilike.*${searchTerm}*,"housingLocation".ilike.*${searchTerm}*)&order="clientName"`
-            : 'order="clientName"&limit=10';
+        let query = '';
+        let conditions = [];
+        
+        // Add search term condition
+        if (searchTerm) {
+            conditions.push(`or=("clientName".ilike.*${searchTerm}*,"housingLocation".ilike.*${searchTerm}*)`);
+        }
+        
+        // Add date range conditions
+        if (dateFrom) {
+            conditions.push(`"${dateField}".gte.${dateFrom}`);
+        }
+        if (dateTo) {
+            conditions.push(`"${dateField}".lte.${dateTo}`);
+        }
+        
+        // Build the query string
+        if (conditions.length > 0) {
+            query = conditions.join('&') + '&order="clientName"';
+        } else {
+            query = 'order="clientName"&limit=20';
+        }
             
         const response = await fetch(
             `${supabaseUrl}/rest/v1/clients?${query}`,

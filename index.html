@@ -285,6 +285,77 @@
         .footer a:hover {
             text-decoration: underline;
         }
+        
+        .filter-section {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .filter-section h3 {
+            color: #1e3a8a;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .date-filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .filter-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .filter-group input,
+        .filter-group select {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .quick-filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-quick {
+            background: #6b7280;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-quick:hover {
+            background: #4b5563;
+        }
+        
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
     </style>
 </head>
 <body>
@@ -665,6 +736,45 @@
                     <button onclick="searchClients()">Search</button>
                 </div>
                 
+                <!-- Date Range Filters -->
+                <div class="filter-section">
+                    <h3>Filter by Date Range</h3>
+                    <div class="date-filters">
+                        <div class="filter-group">
+                            <label>Filter by:</label>
+                            <select id="date-field-select">
+                                <option value="created_at">Date Created</option>
+                                <option value="moveInDate">Move-in Date</option>
+                                <option value="firstPayment">First Payment Date</option>
+                                <option value="exitDate">Exit Date</option>
+                                <option value="lastContactDate">Last Contact Date</option>
+                                <option value="nextContactDate">Next Contact Date</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>From:</label>
+                            <input type="date" id="date-from">
+                        </div>
+                        <div class="filter-group">
+                            <label>To:</label>
+                            <input type="date" id="date-to">
+                        </div>
+                        <div class="filter-group">
+                            <button onclick="applyDateFilter()" class="btn btn-primary">Apply Filter</button>
+                            <button onclick="clearDateFilter()" class="btn btn-secondary">Clear</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Date Buttons -->
+                    <div class="quick-filters">
+                        <button onclick="setQuickDate('today')" class="btn btn-quick">Today</button>
+                        <button onclick="setQuickDate('week')" class="btn btn-quick">This Week</button>
+                        <button onclick="setQuickDate('month')" class="btn btn-quick">This Month</button>
+                        <button onclick="setQuickDate('quarter')" class="btn btn-quick">This Quarter</button>
+                        <button onclick="setQuickDate('year')" class="btn btn-quick">This Year</button>
+                    </div>
+                </div>
+                
                 <div class="client-list" id="client-list"></div>
                 
                 <div id="edit-section" class="hidden">
@@ -728,13 +838,25 @@
         
         async function searchClients() {
             const searchTerm = document.getElementById('search-input').value.trim();
+            const dateField = document.getElementById('date-field-select').value;
+            const dateFrom = document.getElementById('date-from').value;
+            const dateTo = document.getElementById('date-to').value;
             
             try {
-                const response = await fetch(`/.netlify/functions/search-clients?search=${encodeURIComponent(searchTerm)}`);
+                let url = `/.netlify/functions/search-clients?search=${encodeURIComponent(searchTerm)}`;
+                
+                if (dateFrom || dateTo) {
+                    url += `&dateField=${dateField}&dateFrom=${dateFrom}&dateTo=${dateTo}`;
+                }
+                
+                const response = await fetch(url);
                 const data = await response.json();
                 
                 if (data.success) {
                     displayClients(data.clients);
+                    if (data.clients.length === 0) {
+                        showAlert('No clients found for the selected criteria', 'error');
+                    }
                 } else {
                     showAlert('Error searching clients', 'error');
                 }
@@ -744,6 +866,50 @@
             }
         }
         
+        function applyDateFilter() {
+            searchClients();
+        }
+        
+        function clearDateFilter() {
+            document.getElementById('date-from').value = '';
+            document.getElementById('date-to').value = '';
+            document.getElementById('search-input').value = '';
+            searchClients();
+        }
+        
+        function setQuickDate(period) {
+            const now = new Date();
+            const dateFrom = document.getElementById('date-from');
+            const dateTo = document.getElementById('date-to');
+            
+            let startDate, endDate = new Date();
+            
+            switch(period) {
+                case 'today':
+                    startDate = new Date();
+                    break;
+                case 'week':
+                    startDate = new Date();
+                    startDate.setDate(now.getDate() - now.getDay()); // Start of week
+                    break;
+                case 'month':
+                    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                    break;
+                case 'quarter':
+                    const quarter = Math.floor(now.getMonth() / 3);
+                    startDate = new Date(now.getFullYear(), quarter * 3, 1);
+                    break;
+                case 'year':
+                    startDate = new Date(now.getFullYear(), 0, 1);
+                    break;
+            }
+            
+            dateFrom.value = startDate.toISOString().split('T')[0];
+            dateTo.value = endDate.toISOString().split('T')[0];
+            
+            applyDateFilter();
+        }
+        
         function displayClients(clientList) {
             const listElement = document.getElementById('client-list');
             listElement.innerHTML = '';
@@ -751,10 +917,14 @@
             clientList.forEach(client => {
                 const item = document.createElement('div');
                 item.className = 'client-item';
+                const selectedDateField = document.getElementById('date-field-select').value;
+                const dateValue = client[selectedDateField] ? new Date(client[selectedDateField]).toLocaleDateString() : 'N/A';
+                
                 item.innerHTML = `
                     <strong>${client.clientName || 'Unknown Client'}</strong><br>
                     <small>Location: ${client.housingLocation || 'N/A'}</small><br>
                     <small>Status: ${client.status || 'N/A'}</small><br>
+                    <small>${document.getElementById('date-field-select').options[document.getElementById('date-field-select').selectedIndex].text}: ${dateValue}</small><br>
                     <small>ID: ${client.id}</small>
                 `;
                 item.onclick = () => selectClient(client);
