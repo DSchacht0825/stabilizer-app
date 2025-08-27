@@ -1,9 +1,6 @@
-const { createClient } = require('@supabase/supabase-js');
-
-// Initialize Supabase client
+// Simple fetch-based approach to avoid package issues
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 exports.handler = async (event, context) => {
     // Enable CORS
@@ -41,20 +38,29 @@ exports.handler = async (event, context) => {
             updated_at: new Date().toISOString()
         };
 
-        // Insert data into Supabase
-        const { data: insertData, error } = await supabase
-            .from('clients')
-            .insert([clientData])
-            .select();
+        // Insert data into Supabase using direct API call
+        const response = await fetch(`${supabaseUrl}/rest/v1/clients`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': supabaseKey,
+                'Authorization': `Bearer ${supabaseKey}`,
+                'Prefer': 'return=representation'
+            },
+            body: JSON.stringify(clientData)
+        });
 
-        if (error) {
-            console.error('Supabase error:', error);
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Supabase error:', errorText);
             return {
                 statusCode: 500,
                 headers,
-                body: JSON.stringify({ error: 'Database error', details: error.message })
+                body: JSON.stringify({ error: 'Database error', details: errorText })
             };
         }
+
+        const insertData = await response.json();
 
         return {
             statusCode: 200,
@@ -62,7 +68,7 @@ exports.handler = async (event, context) => {
             body: JSON.stringify({ 
                 success: true, 
                 message: 'Client information saved successfully',
-                data: insertData[0]
+                data: insertData
             })
         };
 
