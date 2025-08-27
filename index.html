@@ -13,7 +13,8 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f5f7fa;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            min-height: 100vh;
             padding: 20px;
         }
         
@@ -27,7 +28,31 @@
             padding: 20px;
             border-radius: 10px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .header .logo {
+            height: 64px;
+            width: auto;
+        }
+        
+        .header .title-section {
+            flex: 1;
+        }
+        
+        .header h1 {
+            color: #1e3a8a;
+            margin-bottom: 5px;
+            font-size: 28px;
+        }
+        
+        .header p {
+            color: #64748b;
+            font-size: 16px;
+            margin: 0;
         }
         
         .tabs {
@@ -46,9 +71,9 @@
         }
         
         .tab.active {
-            background: #4a90e2;
+            background: #1e3a8a;
             color: white;
-            border-color: #4a90e2;
+            border-color: #1e3a8a;
         }
         
         .content {
@@ -74,12 +99,16 @@
         
         .search-box button {
             padding: 12px 24px;
-            background: #4a90e2;
+            background: #1e3a8a;
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
+        }
+        
+        .search-box button:hover {
+            background: #1e40af;
         }
         
         .client-list {
@@ -110,10 +139,10 @@
         }
         
         .form-section h3 {
-            color: #333;
+            color: #1e3a8a;
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #4a90e2;
+            border-bottom: 2px solid #1e3a8a;
         }
         
         .form-grid {
@@ -153,7 +182,8 @@
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #4a90e2;
+            border-color: #1e3a8a;
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
         }
         
         .button-group {
@@ -172,8 +202,12 @@
         }
         
         .btn-primary {
-            background: #4a90e2;
+            background: #1e3a8a;
             color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1e40af;
         }
         
         .btn-success {
@@ -203,7 +237,7 @@
             padding: 15px;
             margin-bottom: 10px;
             border-radius: 6px;
-            border-left: 4px solid #4a90e2;
+            border-left: 4px solid #1e3a8a;
         }
         
         .note-date {
@@ -233,13 +267,34 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            margin-top: 40px;
+            opacity: 0.8;
+        }
+        
+        .footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Client Management System</h1>
-            <p>Housing Stability Tracking</p>
+            <img src="https://www.sdrescue.org/wp-content/uploads/2021/06/SDRMLogo2016.svg" alt="San Diego Rescue Mission" class="logo">
+            <div class="title-section">
+                <h1>Client Management System</h1>
+                <p>Housing Stability Tracking • San Diego Rescue Mission</p>
+            </div>
         </div>
         
         <div class="tabs">
@@ -634,6 +689,10 @@
                     </div>
                 </div>
             </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 <a href="https://www.sdrescue.org" target="_blank">San Diego Rescue Mission</a> • Transforming Lives Through Faith</p>
         </div>
     </div>
     
