@@ -668,17 +668,20 @@
         }
         
         async function searchClients() {
-            const searchTerm = document.getElementById('search-input').value;
+            const searchTerm = document.getElementById('search-input').value.trim();
             
             try {
-                const response = await fetch(`/.netlify/functions/search-clients?search=${searchTerm}`);
+                const response = await fetch(`/.netlify/functions/search-clients?search=${encodeURIComponent(searchTerm)}`);
                 const data = await response.json();
                 
                 if (data.success) {
                     displayClients(data.clients);
+                } else {
+                    showAlert('Error searching clients', 'error');
                 }
             } catch (error) {
                 showAlert('Error searching clients', 'error');
+                console.error('Search error:', error);
             }
         }
         
@@ -690,9 +693,10 @@
                 const item = document.createElement('div');
                 item.className = 'client-item';
                 item.innerHTML = `
-                    <strong>${client.clientName}</strong><br>
+                    <strong>${client.clientName || 'Unknown Client'}</strong><br>
                     <small>Location: ${client.housingLocation || 'N/A'}</small><br>
-                    <small>Status: ${client.status || 'N/A'}</small>
+                    <small>Status: ${client.status || 'N/A'}</small><br>
+                    <small>ID: ${client.id}</small>
                 `;
                 item.onclick = () => selectClient(client);
                 listElement.appendChild(item);

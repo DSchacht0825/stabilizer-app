@@ -9,8 +9,12 @@ exports.handler = async (event, context) => {
     const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 
     try {
+        const query = searchTerm 
+            ? `or=("clientName".ilike.*${searchTerm}*,"housingLocation".ilike.*${searchTerm}*)&order="clientName"`
+            : 'order="clientName"&limit=10';
+            
         const response = await fetch(
-            `${supabaseUrl}/rest/v1/clients?or=(clientName.ilike.*${searchTerm}*,housingLocation.ilike.*${searchTerm}*)&order=clientName`,
+            `${supabaseUrl}/rest/v1/clients?${query}`,
             {
                 headers: {
                     'apikey': supabaseKey,
