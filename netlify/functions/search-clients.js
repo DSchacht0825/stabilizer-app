@@ -18,7 +18,7 @@ exports.handler = async (event, context) => {
         
         // Add search term condition
         if (searchTerm) {
-            conditions.push(`or=("clientName".ilike.*${searchTerm}*,"housingLocation".ilike.*${searchTerm}*)`);
+            conditions.push(`or=("clientName".ilike.*${searchTerm}*,"housingLocation".ilike.*${searchTerm}*,"caseManager".ilike.*${searchTerm}*)`);
         }
         
         // Add date range conditions
