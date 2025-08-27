@@ -356,6 +356,102 @@
         .btn-secondary:hover {
             background: #4b5563;
         }
+        
+        .report-section {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .report-filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+            border-left: 4px solid #1e3a8a;
+        }
+        
+        .stat-card h4 {
+            color: #1e3a8a;
+            margin-bottom: 10px;
+            font-size: 14px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #1e3a8a;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #64748b;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        
+        .report-results {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .report-table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        .report-table th,
+        .report-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .report-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #1e3a8a;
+        }
+        
+        .report-table tr:hover {
+            background: #f8fafc;
+        }
+        
+        .report-summary {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e0f2fe;
+            border-radius: 6px;
+            border-left: 4px solid #0ea5e9;
+        }
     </style>
 </head>
 <body>
@@ -371,6 +467,7 @@
         <div class="tabs">
             <div class="tab active" onclick="switchTab('new')">New Client</div>
             <div class="tab" onclick="switchTab('search')">Search/Update Client</div>
+            <div class="tab" onclick="switchTab('reports')">Custom Reports</div>
         </div>
         
         <div class="content">
@@ -831,6 +928,77 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Reports Tab -->
+            <div id="reports-tab" class="hidden">
+                <h2>Custom Reports</h2>
+                
+                <!-- Employment & Benefits Reports -->
+                <div class="report-section">
+                    <h3>Employment & Benefits Analysis</h3>
+                    <div class="report-filters">
+                        <div class="filter-group">
+                            <label>Report Type:</label>
+                            <select id="report-type">
+                                <option value="employment">Employment Status Report</option>
+                                <option value="rent-payment">Rent Payment Status Report</option>
+                                <option value="disability">Disability Benefits Report</option>
+                                <option value="benefits-overview">All Benefits Overview</option>
+                                <option value="stabilizer-caseload">Stabilizer Caseload Report</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Filter by Stabilizer:</label>
+                            <select id="report-stabilizer">
+                                <option value="">All Stabilizers</option>
+                                <option value="Carolina">Carolina</option>
+                                <option value="Alex">Alex</option>
+                                <option value="Vanessa">Vanessa</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <button onclick="generateReport()" class="btn btn-primary">Generate Report</button>
+                            <button onclick="exportReport()" class="btn btn-secondary">Export to CSV</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Stats Cards -->
+                <div class="stats-cards">
+                    <div class="stat-card" id="employment-stats">
+                        <h4>Employment Stats</h4>
+                        <div class="stat-number" id="employed-count">-</div>
+                        <div class="stat-label">Clients Employed</div>
+                    </div>
+                    <div class="stat-card" id="rent-stats">
+                        <h4>Self-Paying Rent</h4>
+                        <div class="stat-number" id="self-paying-count">-</div>
+                        <div class="stat-label">Clients Independent</div>
+                    </div>
+                    <div class="stat-card" id="benefits-stats">
+                        <h4>Receiving Benefits</h4>
+                        <div class="stat-number" id="benefits-count">-</div>
+                        <div class="stat-label">Total with Benefits</div>
+                    </div>
+                    <div class="stat-card" id="total-stats">
+                        <h4>Total Active</h4>
+                        <div class="stat-number" id="total-count">-</div>
+                        <div class="stat-label">Active Clients</div>
+                    </div>
+                </div>
+                
+                <!-- Report Results -->
+                <div class="report-results" id="report-results">
+                    <h3 id="report-title">Report Results</h3>
+                    <div class="report-table-container">
+                        <table id="report-table" class="report-table">
+                            <thead id="report-header"></thead>
+                            <tbody id="report-body"></tbody>
+                        </table>
+                    </div>
+                    <div class="report-summary" id="report-summary"></div>
+                </div>
+            </div>
         </div>
         
         <div class="footer">
@@ -847,12 +1015,19 @@
             tabs.forEach(t => t.classList.remove('active'));
             event.target.classList.add('active');
             
+            // Hide all tabs
+            document.getElementById('new-tab').classList.add('hidden');
+            document.getElementById('search-tab').classList.add('hidden');
+            document.getElementById('reports-tab').classList.add('hidden');
+            
+            // Show selected tab
             if (tab === 'new') {
                 document.getElementById('new-tab').classList.remove('hidden');
-                document.getElementById('search-tab').classList.add('hidden');
-            } else {
-                document.getElementById('new-tab').classList.add('hidden');
+            } else if (tab === 'search') {
                 document.getElementById('search-tab').classList.remove('hidden');
+            } else if (tab === 'reports') {
+                document.getElementById('reports-tab').classList.remove('hidden');
+                loadDashboardStats();
             }
         }
         
@@ -1098,6 +1273,118 @@
                 showAlert('Error saving client', 'error');
             }
         });
+        
+        // Reports Functions
+        async function loadDashboardStats() {
+            try {
+                const response = await fetch('/.netlify/functions/get-dashboard-stats');
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('employed-count').textContent = data.stats.employed || 0;
+                    document.getElementById('self-paying-count').textContent = data.stats.selfPaying || 0;
+                    document.getElementById('benefits-count').textContent = data.stats.withBenefits || 0;
+                    document.getElementById('total-count').textContent = data.stats.total || 0;
+                }
+            } catch (error) {
+                console.error('Error loading dashboard stats:', error);
+            }
+        }
+        
+        async function generateReport() {
+            const reportType = document.getElementById('report-type').value;
+            const stabilizer = document.getElementById('report-stabilizer').value;
+            
+            try {
+                let url = `/.netlify/functions/generate-report?type=${reportType}`;
+                if (stabilizer) {
+                    url += `&stabilizer=${encodeURIComponent(stabilizer)}`;
+                }
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayReport(data.report, data.summary);
+                } else {
+                    showAlert('Error generating report', 'error');
+                }
+            } catch (error) {
+                showAlert('Error generating report', 'error');
+                console.error('Report error:', error);
+            }
+        }
+        
+        function displayReport(reportData, summary) {
+            const reportTitle = document.getElementById('report-title');
+            const reportHeader = document.getElementById('report-header');
+            const reportBody = document.getElementById('report-body');
+            const reportSummary = document.getElementById('report-summary');
+            
+            // Set title
+            const reportType = document.getElementById('report-type');
+            reportTitle.textContent = reportType.options[reportType.selectedIndex].text;
+            
+            if (reportData && reportData.length > 0) {
+                // Create table headers
+                const headers = Object.keys(reportData[0]);
+                reportHeader.innerHTML = '<tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
+                
+                // Create table rows
+                reportBody.innerHTML = reportData.map(row => 
+                    '<tr>' + headers.map(h => `<td>${row[h] || 'N/A'}</td>`).join('') + '</tr>'
+                ).join('');
+                
+                // Show summary
+                if (summary) {
+                    reportSummary.innerHTML = `
+                        <h4>Summary</h4>
+                        <p>Total Records: ${reportData.length}</p>
+                        ${summary.details ? `<p>${summary.details}</p>` : ''}
+                    `;
+                }
+            } else {
+                reportHeader.innerHTML = '<tr><th>No Data</th></tr>';
+                reportBody.innerHTML = '<tr><td>No records found for this report.</td></tr>';
+                reportSummary.innerHTML = '<p>No data available for the selected criteria.</p>';
+            }
+        }
+        
+        function exportReport() {
+            const table = document.getElementById('report-table');
+            const reportType = document.getElementById('report-type').value;
+            
+            if (!table.querySelector('tbody').children.length) {
+                showAlert('No data to export. Generate a report first.', 'error');
+                return;
+            }
+            
+            let csv = '';
+            
+            // Add headers
+            const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent);
+            csv += headers.join(',') + '\n';
+            
+            // Add data rows
+            const rows = Array.from(table.querySelectorAll('tbody tr'));
+            rows.forEach(row => {
+                const cells = Array.from(row.querySelectorAll('td')).map(td => 
+                    `"${td.textContent.replace(/"/g, '""')}"`
+                );
+                csv += cells.join(',') + '\n';
+            });
+            
+            // Download CSV
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${reportType}_report_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            
+            showAlert('Report exported successfully!');
+        }
     </script>
 </body>
 </html>
