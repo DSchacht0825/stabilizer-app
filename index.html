@@ -230,6 +230,16 @@
             padding: 20px;
             background: #f8f9fa;
             border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            display: block !important;
+            visibility: visible !important;
+        }
+        
+        .notes-section h3 {
+            color: #1e3a8a !important;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #1e3a8a;
+            padding-bottom: 10px;
         }
         
         .note-item {
@@ -1009,6 +1019,25 @@
     <script>
         let currentClientId = null;
         let clients = [];
+        let currentClientData = null;
+        
+        // Prevent form field issues by checking form state periodically
+        function checkFormIntegrity() {
+            const editSection = document.getElementById('edit-section');
+            const editForm = document.getElementById('edit-form');
+            
+            if (currentClientId && editSection && !editSection.classList.contains('hidden')) {
+                if (!editForm || editForm.children.length === 0) {
+                    console.log('Detected form corruption, restoring...');
+                    if (currentClientData) {
+                        selectClient(currentClientData);
+                    }
+                }
+            }
+        }
+        
+        // Check form integrity every 10 seconds
+        setInterval(checkFormIntegrity, 10000);
         
         function switchTab(tab) {
             const tabs = document.querySelectorAll('.tab');
@@ -1142,19 +1171,41 @@
         
         function selectClient(client) {
             currentClientId = client.id;
-            document.getElementById('edit-section').classList.remove('hidden');
+            currentClientData = client; // Store for recovery
+            
+            const editSection = document.getElementById('edit-section');
+            editSection.classList.remove('hidden');
             
             // Populate edit form with client data
             const editForm = document.getElementById('edit-form');
-            editForm.innerHTML = document.getElementById('client-form').innerHTML;
+            const originalForm = document.getElementById('client-form');
             
-            // Fill in values
-            Object.keys(client).forEach(key => {
-                const field = editForm.querySelector(`[name="${key}"]`);
-                if (field) {
-                    field.value = client[key] || '';
+            // Clone the form content properly to avoid losing references
+            editForm.innerHTML = originalForm.innerHTML;
+            
+            // Wait a moment for DOM to update, then populate values
+            setTimeout(() => {
+                Object.keys(client).forEach(key => {
+                    const field = editForm.querySelector(`[name="${key}"]`);
+                    if (field) {
+                        field.value = client[key] || '';
+                        
+                        // Force update for select elements
+                        if (field.tagName === 'SELECT') {
+                            const option = field.querySelector(`option[value="${client[key]}"]`);
+                            if (option) {
+                                option.selected = true;
+                            }
+                        }
+                    }
+                });
+                
+                // Make sure notes section is visible
+                const notesSection = editSection.querySelector('.notes-section');
+                if (notesSection) {
+                    notesSection.style.display = 'block';
                 }
-            });
+            }, 100);
             
             // Load notes history
             loadNotes(client.id);
@@ -1218,9 +1269,18 @@
                 return;
             }
             
-            const formData = new FormData(document.getElementById('edit-form'));
+            const editForm = document.getElementById('edit-form');
+            if (!editForm) {
+                showAlert('Form not found. Please reload the page.', 'error');
+                return;
+            }
+            
+            const formData = new FormData(editForm);
             const data = Object.fromEntries(formData.entries());
             data.id = currentClientId;
+            
+            // Debug: log the data being sent
+            console.log('Updating client with data:', data);
             
             try {
                 const response = await fetch('/.netlify/functions/update-client', {
