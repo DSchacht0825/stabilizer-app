@@ -31,6 +31,31 @@ exports.handler = async (event, context) => {
     try {
         const data = JSON.parse(event.body);
         
+        // Clean up data - convert empty strings to null for numeric fields
+        const numericFields = [
+            'rentAmount', 'rentPaid', 'utilityPaid', 'leaseDeposit', 
+            'depositRefund', 'utilitiesDeposit', 'membersOnLease'
+        ];
+        
+        // Convert empty strings to null for numeric fields
+        numericFields.forEach(field => {
+            if (data[field] === '' || data[field] === undefined) {
+                data[field] = null;
+            }
+        });
+        
+        // Convert empty date strings to null
+        const dateFields = [
+            'moveInDate', 'leaseEndDate', 'exitDate', 'firstPayment',
+            'lastPaymentDate', 'lastContactDate', 'nextContactDate'
+        ];
+        
+        dateFields.forEach(field => {
+            if (data[field] === '' || data[field] === undefined) {
+                data[field] = null;
+            }
+        });
+
         // Add timestamp
         const clientData = {
             ...data,
