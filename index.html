@@ -776,6 +776,11 @@
         }
         
         async function updateClient() {
+            if (!currentClientId) {
+                showAlert('No client selected for update', 'error');
+                return;
+            }
+            
             const formData = new FormData(document.getElementById('edit-form'));
             const data = Object.fromEntries(formData.entries());
             data.id = currentClientId;
@@ -787,11 +792,17 @@
                     body: JSON.stringify(data)
                 });
                 
-                if (response.ok) {
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
                     showAlert('Client updated successfully');
+                    // Refresh the search results
                     searchClients();
+                } else {
+                    showAlert('Error updating client: ' + (result.error || 'Unknown error'), 'error');
                 }
             } catch (error) {
+                console.error('Update error:', error);
                 showAlert('Error updating client', 'error');
             }
         }

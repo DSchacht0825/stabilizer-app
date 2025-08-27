@@ -25,6 +25,30 @@ exports.handler = async (event, context) => {
         const clientId = data.id;
         delete data.id;
         
+        // Clean up data - convert empty strings to null for numeric fields
+        const numericFields = [
+            'rentAmount', 'rentPaid', 'utilityPaid', 'leaseDeposit', 
+            'depositRefund', 'utilitiesDeposit', 'membersOnLease'
+        ];
+        
+        numericFields.forEach(field => {
+            if (data[field] === '' || data[field] === undefined) {
+                data[field] = null;
+            }
+        });
+        
+        // Convert empty date strings to null
+        const dateFields = [
+            'moveInDate', 'leaseEndDate', 'exitDate', 'firstPayment',
+            'lastPaymentDate', 'lastContactDate', 'nextContactDate'
+        ];
+        
+        dateFields.forEach(field => {
+            if (data[field] === '' || data[field] === undefined) {
+                data[field] = null;
+            }
+        });
+        
         data.updated_at = new Date().toISOString();
 
         const response = await fetch(
