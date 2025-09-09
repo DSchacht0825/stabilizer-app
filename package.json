@@ -1,0 +1,19 @@
+{
+  "name": "client-app",
+  "version": "1.0.0",
+  "description": "Client information capture app",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo 'Build complete'",
+    "dev": "netlify dev"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.3"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.15.4"
+  },
+  "keywords": ["client", "form", "netlify", "supabase"],
+  "author": "",
+  "license": "MIT"
+}
