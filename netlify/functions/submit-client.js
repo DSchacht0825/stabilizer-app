@@ -33,8 +33,7 @@ exports.handler = async (event, context) => {
         
         // Clean up data - convert empty strings to null for numeric fields
         const numericFields = [
-            'rentAmount', 'rentPaid', 'utilityPaid', 'leaseDeposit', 
-            'depositRefund', 'utilitiesDeposit', 'membersOnLease'
+            'age', 'monthly_rent', 'monthly_income', 'hours_per_week', 'priority_score'
         ];
         
         // Convert empty strings to null for numeric fields
@@ -46,8 +45,8 @@ exports.handler = async (event, context) => {
         
         // Convert empty date strings to null
         const dateFields = [
-            'moveInDate', 'leaseEndDate', 'exitDate', 'firstPayment',
-            'lastPaymentDate', 'lastContactDate', 'nextContactDate'
+            'intake_date', 'next_review_date', 'end_date_services', 'date_of_birth',
+            'lease_start_date', 'lease_end_date', 'income_verification_date', 'signature_date'
         ];
         
         dateFields.forEach(field => {

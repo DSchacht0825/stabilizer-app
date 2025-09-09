@@ -740,6 +740,55 @@
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('intake_date').value = today;
         document.getElementById('signature_date').value = today;
+
+        // Handle form submission
+        document.querySelector('form[name="housing-intake"]').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Submitting...';
+            submitBtn.disabled = true;
+            
+            try {
+                const formData = new FormData(this);
+                const data = Object.fromEntries(formData.entries());
+                
+                // Convert checkbox values to arrays
+                const checkboxGroups = ['benefits', 'health_conditions', 'services_needed'];
+                checkboxGroups.forEach(group => {
+                    const checkboxes = formData.getAll(group);
+                    if (checkboxes.length > 0) {
+                        data[group] = checkboxes;
+                    }
+                });
+                
+                console.log('Submitting data:', data);
+                
+                const response = await fetch('/.netlify/functions/submit-client', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    // Redirect to success page
+                    window.location.href = '/success.html';
+                } else {
+                    alert('Error submitting form: ' + (result.error || 'Please try again'));
+                    console.error('Submit error:', result);
+                }
+                
+            } catch (error) {
+                alert('Error submitting form: ' + error.message);
+                console.error('Form submission error:', error);
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
     </script>
 </body>
 </html>

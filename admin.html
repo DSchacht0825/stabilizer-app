@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Housing Stabilizer Admin Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header .logo {
+            height: 64px;
+            width: auto;
+        }
+
+        .header h1 {
+            color: #1e3a8a;
+            margin-bottom: 5px;
+            font-size: 28px;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .search-section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: end;
+        }
+
+        .search-group {
+            flex: 1;
+        }
+
+        .search-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .search-box input, .search-box select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .search-box button {
+            padding: 12px 24px;
+            background: #1e3a8a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            white-space: nowrap;
+        }
+
+        .search-box button:hover {
+            background: #1e40af;
+        }
+
+        .client-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .client-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .client-item:hover {
+            background: #f8f9fa;
+        }
+
+        .client-item.selected {
+            background: #e3f2fd;
+            border-left: 4px solid #1e3a8a;
+        }
+
+        .client-details {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .client-details.show {
+            display: block;
+        }
+
+        .details-header {
+            border-bottom: 2px solid #1e3a8a;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .details-header h2 {
+            color: #1e3a8a;
+            font-size: 24px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .detail-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #1e3a8a;
+        }
+
+        .detail-section h3 {
+            color: #1e3a8a;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .detail-item {
+            margin-bottom: 10px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .detail-value {
+            color: #6b7280;
+            margin-left: 10px;
+        }
+
+        .notes-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            margin-top: 30px;
+        }
+
+        .notes-section h3 {
+            color: #1e3a8a;
+            margin-bottom: 20px;
+            font-size: 20px;
+            border-bottom: 2px solid #1e3a8a;
+            padding-bottom: 10px;
+        }
+
+        .notes-history {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .note-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-left: 4px solid #1e3a8a;
+        }
+
+        .note-date {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .note-content {
+            color: #374151;
+            line-height: 1.5;
+        }
+
+        .add-note-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .add-note-section h4 {
+            color: #1e3a8a;
+            margin-bottom: 15px;
+        }
+
+        .add-note-section textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 6px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 100px;
+            margin-bottom: 15px;
+        }
+
+        .add-note-section textarea:focus {
+            outline: none;
+            border-color: #1e3a8a;
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #1e3a8a;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1e40af;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #6b7280;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            margin-top: 40px;
+            opacity: 0.8;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn-quick {
+            background: #6b7280;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-quick:hover {
+            background: #4b5563;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://www.sdrescue.org/wp-content/uploads/2021/06/SDRMLogo2016.svg" alt="San Diego Rescue Mission" class="logo">
+            <div>
+                <h1>Housing Stabilizer Dashboard</h1>
+                <p>Client Search & Case Management • San Diego Rescue Mission</p>
+            </div>
+        </div>
+
+        <div id="alert-box"></div>
+
+        <div class="search-section">
+            <h2 style="color: #1e3a8a; margin-bottom: 20px;">Find Clients</h2>
+            
+            <div class="search-box">
+                <div class="search-group">
+                    <label>Search by Name or ID</label>
+                    <input type="text" id="search-input" placeholder="Enter client name or number...">
+                </div>
+                <div class="search-group">
+                    <label>Filter by Stabilizer</label>
+                    <select id="stabilizer-filter">
+                        <option value="">All Stabilizers</option>
+                        <option value="Carolina">Carolina</option>
+                        <option value="Alex">Alex</option>
+                        <option value="Vanessa">Vanessa</option>
+                    </select>
+                </div>
+                <button onclick="searchClients()">Search</button>
+            </div>
+
+            <div class="quick-actions">
+                <button onclick="showRecentClients()" class="btn-quick">Recent Clients (7 days)</button>
+                <button onclick="showMyClients()" class="btn-quick">My Active Cases</button>
+                <button onclick="showAllClients()" class="btn-quick">All Clients</button>
+            </div>
+
+            <div class="client-list" id="client-list">
+                <div class="empty-state">
+                    Use the search above to find clients, or click "All Clients" to see everyone.
+                </div>
+            </div>
+        </div>
+
+        <!-- Client Details Section -->
+        <div class="client-details" id="client-details">
+            <div class="details-header">
+                <h2 id="client-name-header">Client Details</h2>
+                <p id="client-id-header"></p>
+            </div>
+
+            <div class="details-grid" id="client-info-grid">
+                <!-- Client information will be populated here -->
+            </div>
+
+            <!-- Notes Section -->
+            <div class="notes-section">
+                <h3>Meeting Notes & Case Updates</h3>
+                
+                <div class="notes-history" id="notes-history">
+                    <div class="loading">Loading notes...</div>
+                </div>
+
+                <div class="add-note-section">
+                    <h4>Add New Note</h4>
+                    <textarea id="new-note" placeholder="Enter case notes, meeting summary, follow-up actions, etc..."></textarea>
+                    <button class="btn btn-primary" onclick="addNote()">Save Note</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2025 <a href="https://www.sdrescue.org" target="_blank">San Diego Rescue Mission</a> • Housing Stabilization Program</p>
+    </div>
+
+    <script>
+        let currentClientId = null;
+        let currentStabilizer = null;
+
+        function showAlert(message, type = 'success') {
+            const alertBox = document.getElementById('alert-box');
+            alertBox.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => {
+                alertBox.innerHTML = '';
+            }, 5000);
+        }
+
+        async function searchClients() {
+            const searchTerm = document.getElementById('search-input').value.trim();
+            const stabilizer = document.getElementById('stabilizer-filter').value;
+            
+            if (!searchTerm && !stabilizer) {
+                showAlert('Please enter a search term or select a stabilizer', 'error');
+                return;
+            }
+
+            try {
+                let url = `/.netlify/functions/search-clients?search=${encodeURIComponent(searchTerm)}`;
+                if (stabilizer) {
+                    url += `&stabilizer=${encodeURIComponent(stabilizer)}`;
+                }
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.success) {
+                    displayClients(data.clients);
+                    if (data.clients.length === 0) {
+                        showAlert('No clients found matching your search criteria', 'error');
+                    }
+                } else {
+                    showAlert('Error searching clients: ' + (data.error || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                showAlert('Error connecting to database. Please try again.', 'error');
+                console.error('Search error:', error);
+            }
+        }
+
+        async function showRecentClients() {
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+            
+            try {
+                const response = await fetch(`/.netlify/functions/search-clients?dateFrom=${oneWeekAgo.toISOString().split('T')[0]}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    displayClients(data.clients);
+                    showAlert(`Found ${data.clients.length} clients from the last 7 days`);
+                } else {
+                    showAlert('Error loading recent clients', 'error');
+                }
+            } catch (error) {
+                showAlert('Error loading recent clients', 'error');
+            }
+        }
+
+        async function showMyClients() {
+            // For now, we'll use the stabilizer filter
+            const stabilizer = prompt('Enter your name (Carolina, Alex, or Vanessa):');
+            if (stabilizer) {
+                document.getElementById('stabilizer-filter').value = stabilizer;
+                await searchClients();
+            }
+        }
+
+        async function showAllClients() {
+            try {
+                const response = await fetch('/.netlify/functions/search-clients?search=');
+                const data = await response.json();
+
+                if (data.success) {
+                    displayClients(data.clients);
+                    showAlert(`Found ${data.clients.length} total clients`);
+                } else {
+                    showAlert('Error loading all clients', 'error');
+                }
+            } catch (error) {
+                showAlert('Error loading clients', 'error');
+            }
+        }
+
+        function displayClients(clientList) {
+            const listElement = document.getElementById('client-list');
+            listElement.innerHTML = '';
+
+            if (clientList.length === 0) {
+                listElement.innerHTML = '<div class="empty-state">No clients found.</div>';
+                return;
+            }
+
+            clientList.forEach(client => {
+                const item = document.createElement('div');
+                item.className = 'client-item';
+                
+                const intakeDate = client.intake_date ? new Date(client.intake_date).toLocaleDateString() : 'N/A';
+                const stabilizer = client.housing_stabilizer || client.caseManager || 'Not assigned';
+                
+                item.innerHTML = `
+                    <strong>${client.client_name || client.clientName || 'Unknown Client'}</strong>
+                    <br>
+                    <small><strong>Stabilizer:</strong> ${stabilizer}</small>
+                    <br>
+                    <small><strong>Housing Location:</strong> ${client.housing_location || client.housingLocation || 'N/A'}</small>
+                    <br>
+                    <small><strong>Phone:</strong> ${client.phone_primary || 'N/A'}</small>
+                    <br>
+                    <small><strong>Intake Date:</strong> ${intakeDate}</small>
+                    <br>
+                    <small><strong>ID:</strong> ${client.id}</small>
+                `;
+                item.onclick = () => selectClient(client);
+                listElement.appendChild(item);
+            });
+        }
+
+        function selectClient(client) {
+            currentClientId = client.id;
+            currentStabilizer = client.housing_stabilizer || client.caseManager;
+            
+            // Remove previous selection
+            document.querySelectorAll('.client-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Mark current selection
+            event.target.classList.add('selected');
+            
+            // Show client details
+            const detailsSection = document.getElementById('client-details');
+            detailsSection.classList.add('show');
+            
+            // Update header
+            document.getElementById('client-name-header').textContent = client.client_name || client.clientName || 'Unknown Client';
+            document.getElementById('client-id-header').textContent = `Client ID: ${client.id} | Stabilizer: ${currentStabilizer || 'Not assigned'}`;
+            
+            // Display client information
+            displayClientInfo(client);
+            
+            // Load notes
+            loadNotes(client.id);
+        }
+
+        function displayClientInfo(client) {
+            const grid = document.getElementById('client-info-grid');
+            grid.innerHTML = `
+                <div class="detail-section">
+                    <h3>Contact Information</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Primary Phone:</span>
+                        <span class="detail-value">${client.phone_primary || 'N/A'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value">${client.email || 'N/A'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Address:</span>
+                        <span class="detail-value">${client.current_address || 'N/A'}</span>
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <h3>Housing Details</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Location:</span>
+                        <span class="detail-value">${client.housing_location || client.housingLocation || 'N/A'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Monthly Rent:</span>
+                        <span class="detail-value">$${client.monthly_rent || client.rentAmount || 'N/A'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Landlord:</span>
+                        <span class="detail-value">${client.landlord_name || client.landlordName || 'N/A'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Landlord Phone:</span>
+                        <span class="detail-value">${client.landlord_phone || client.landlordContact || 'N/A'}</span>
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <h3>Employment & Income</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Employer:</span>
+                        <span class="detail-value">${client.employer_name || 'N/A'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Employment Status:</span>
+                        <span class="detail-value">${client.employment_status || client.workStatus || 'N/A'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Monthly Income:</span>
+                        <span class="detail-value">$${client.monthly_income || 'N/A'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Benefits:</span>
+                        <span class="detail-value">${client.benefits || 'N/A'}</span>
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <h3>Important Dates</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Intake Date:</span>
+                        <span class="detail-value">${client.intake_date ? new Date(client.intake_date).toLocaleDateString() : 'N/A'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Move-in Date:</span>
+                        <span class="detail-value">${client.moveInDate ? new Date(client.moveInDate).toLocaleDateString() : 'N/A'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Lease End:</span>
+                        <span class="detail-value">${client.lease_end_date || client.leaseEndDate ? new Date(client.lease_end_date || client.leaseEndDate).toLocaleDateString() : 'N/A'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Next Review:</span>
+                        <span class="detail-value">${client.next_review_date ? new Date(client.next_review_date).toLocaleDateString() : 'N/A'}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function loadNotes(clientId) {
+            const notesHistory = document.getElementById('notes-history');
+            notesHistory.innerHTML = '<div class="loading">Loading notes...</div>';
+            
+            try {
+                const response = await fetch(`/.netlify/functions/get-notes?clientId=${clientId}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    displayNotes(data.notes);
+                } else {
+                    notesHistory.innerHTML = '<div class="empty-state">No notes available.</div>';
+                }
+            } catch (error) {
+                notesHistory.innerHTML = '<div class="empty-state">Error loading notes.</div>';
+                console.error('Error loading notes:', error);
+            }
+        }
+
+        function displayNotes(notes) {
+            const notesHistory = document.getElementById('notes-history');
+            notesHistory.innerHTML = '';
+
+            if (notes.length === 0) {
+                notesHistory.innerHTML = '<div class="empty-state">No notes yet. Add the first note below.</div>';
+                return;
+            }
+
+            notes.forEach(note => {
+                const noteItem = document.createElement('div');
+                noteItem.className = 'note-item';
+                noteItem.innerHTML = `
+                    <div class="note-date">${new Date(note.created_at).toLocaleString()}</div>
+                    <div class="note-content">${note.content}</div>
+                `;
+                notesHistory.appendChild(noteItem);
+            });
+        }
+
+        async function addNote() {
+            const noteContent = document.getElementById('new-note').value.trim();
+            if (!noteContent || !currentClientId) {
+                showAlert('Please enter a note and select a client', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/.netlify/functions/add-note', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        clientId: currentClientId,
+                        content: noteContent
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    document.getElementById('new-note').value = '';
+                    loadNotes(currentClientId);
+                    showAlert('Note added successfully');
+                } else {
+                    showAlert('Error adding note: ' + (result.error || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                showAlert('Error adding note', 'error');
+                console.error('Add note error:', error);
+            }
+        }
+
+        // Enter key support for search
+        document.getElementById('search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchClients();
+            }
+        });
+
+        // Auto-search when stabilizer filter changes
+        document.getElementById('stabilizer-filter').addEventListener('change', function() {
+            if (this.value) {
+                searchClients();
+            }
+        });
+    </script>
+</body>
+</html>
