@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Housing Stabilization Complete Intake - San Diego Rescue Mission</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            max-width: 280px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section {
+            margin-bottom: 35px;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 25px;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #bdc3c7;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-row.two-col {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .form-row.three-col {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .form-row.four-col {
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 13px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .checkbox-group, .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 5px;
+        }
+
+        .checkbox-item, .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .checkbox-item input, .radio-item input {
+            width: auto;
+            margin: 0;
+        }
+
+        .checkbox-item label, .radio-item label {
+            margin: 0;
+            font-weight: normal;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            max-width: 300px;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .form-container, .header {
+                padding: 20px;
+            }
+
+            .form-row, .form-row.two-col, .form-row.three-col, .form-row.four-col {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .checkbox-group, .radio-group {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://www.sdrescue.org/wp-content/uploads/2021/06/SDRMLogo2016.svg" alt="San Diego Rescue Mission" class="logo">
+            <h1>Housing Stabilization Complete Intake Form</h1>
+            <p>Comprehensive client information for housing stabilization services</p>
+        </div>
+
+        <div class="form-container">
+            <form name="housing-intake" method="POST" action="/success.html" data-netlify="true" netlify-honeypot="bot-field">
+                <!-- Hidden field for Netlify Forms -->
+                <input type="hidden" name="form-name" value="housing-intake" />
+                <!-- Honeypot field for spam protection -->
+                <p style="display: none;">
+                    <label>Don't fill this out if you're human: <input name="bot-field" /></label>
+                </p>
+
+                <!-- Administrative Information -->
+                <div class="section">
+                    <h2 class="section-title">Administrative Information</h2>
+                    
+                    <div class="form-row three-col">
+                        <div class="form-group">
+                            <label for="client_name">Client Name</label>
+                            <input type="text" id="client_name" name="client_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="client_number">Client Number</label>
+                            <input type="text" id="client_number" name="client_number">
+                        </div>
+                        <div class="form-group">
+                            <label for="housing_stabilizer">Housing Stabilizer</label>
+                            <select id="housing_stabilizer" name="housing_stabilizer">
+                                <option value="">Select...</option>
+                                <option value="Carolina">Carolina</option>
+                                <option value="Alex">Alex</option>
+                                <option value="Vanessa">Vanessa</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row three-col">
+                        <div class="form-group">
+                            <label for="outreach_worker">Outreach Worker</label>
+                            <input type="text" id="outreach_worker" name="outreach_worker">
+                        </div>
+                        <div class="form-group">
+                            <label for="intake_date">Intake Date</label>
+                            <input type="date" id="intake_date" name="intake_date">
+                        </div>
+                        <div class="form-group">
+                            <label for="next_review_date">Next Review Date</label>
+                            <input type="date" id="next_review_date" name="next_review_date">
+                        </div>
+                    </div>
+
+                    <div class="form-row two-col">
+                        <div class="form-group">
+                            <label for="end_date_services">End Date of Services</label>
+                            <input type="date" id="end_date_services" name="end_date_services">
+                        </div>
+                        <div class="form-group">
+                            <label for="staff_completing">Staff Member Completing Form</label>
+                            <input type="text" id="staff_completing" name="staff_completing">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Personal Information -->
+                <div class="section">
+                    <h2 class="section-title">Personal Information</h2>
+                    
+                    <div class="form-row four-col">
+                        <div class="form-group">
+                            <label for="date_of_birth">Date of Birth</label>
+                            <input type="date" id="date_of_birth" name="date_of_birth">
+                        </div>
+                        <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="number" id="age" name="age" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender" name="gender">
+                                <option value="">Select...</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Non-binary">Non-binary</option>
+                                <option value="Prefer not to say">Prefer not to say</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="race_ethnicity">Race/Ethnicity</label>
+                            <select id="race_ethnicity" name="race_ethnicity">
+                                <option value="">Select...</option>
+                                <option value="White">White</option>
+                                <option value="Black/African American">Black/African American</option>
+                                <option value="Hispanic/Latino">Hispanic/Latino</option>
+                                <option value="Asian">Asian</option>
+                                <option value="Native American">Native American</option>
+                                <option value="Pacific Islander">Pacific Islander</option>
+                                <option value="Mixed">Mixed</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="section">
+                    <h2 class="section-title">Contact Information</h2>
+                    
+                    <div class="form-row two-col">
+                        <div class="form-group">
+                            <label for="phone_primary">Primary Phone</label>
+                            <input type="tel" id="phone_primary" name="phone_primary">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone_secondary">Secondary Phone</label>
+                            <input type="tel" id="phone_secondary" name="phone_secondary">
+                        </div>
+                    </div>
+
+                    <div class="form-row two-col">
+                        <div class="form-group">
+                            <label for="email">Email Address (Optional)</label>
+                            <input type="email" id="email" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="preferred_contact_method">Preferred Contact Method</label>
+                            <select id="preferred_contact_method" name="preferred_contact_method">
+                                <option value="">Select...</option>
+                                <option value="Phone">Phone</option>
+                                <option value="Email">Email</option>
+                                <option value="Text">Text</option>
+                                <option value="Mail">Mail</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="current_address">Current Address</label>
+                        <textarea id="current_address" name="current_address" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <!-- Housing Information -->
+                <div class="section">
+                    <h2 class="section-title">Housing Information</h2>
+                    
+                    <div class="form-group">
+                        <label for="housing_location">Housing Location/Property Name</label>
+                        <input type="text" id="housing_location" name="housing_location">
+                    </div>
+
+                    <div class="form-row two-col">
+                        <div class="form-group">
+                            <label for="landlord_name">Landlord Name</label>
+                            <input type="text" id="landlord_name" name="landlord_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="landlord_phone">Landlord Phone</label>
+                            <input type="tel" id="landlord_phone" name="landlord_phone">
+                        </div>
+                    </div>
+
+                    <div class="form-row two-col">
+                        <div class="form-group">
+                            <label for="property_manager">Property Manager</label>
+                            <input type="text" id="property_manager" name="property_manager">
+                        </div>
+                        <div class="form-group">
+                            <label for="property_manager_phone">Property Manager Phone</label>
+                            <input type="tel" id="property_manager_phone" name="property_manager_phone">
+                        </div>
+                    </div>
+
+                    <div class="form-row three-col">
+                        <div class="form-group">
+                            <label for="monthly_rent">Monthly Rent Amount</label>
+                            <input type="number" id="monthly_rent" name="monthly_rent" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="lease_start_date">Lease Start Date</label>
+                            <input type="date" id="lease_start_date" name="lease_start_date">
+                        </div>
+                        <div class="form-group">
+                            <label for="lease_end_date">Lease End Date</label>
+                            <input type="date" id="lease_end_date" name="lease_end_date">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Employment & Income -->
+                <div class="section">
+                    <h2 class="section-title">Employment & Income Information</h2>
+                    
+                    <div class="form-row two-col">
+                        <div class="form-group">
+                            <label for="employer_name">Employer Name</label>
+                            <input type="text" id="employer_name" name="employer_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="employer_phone">Employer Phone</label>
+                            <input type="tel" id="employer_phone" name="employer_phone">
+                        </div>
+                    </div>
+
+                    <div class="form-row three-col">
+                        <div class="form-group">
+                            <label for="job_title">Job Title/Position</label>
+                            <input type="text" id="job_title" name="job_title">
+                        </div>
+                        <div class="form-group">
+                            <label for="employment_status">Employment Status</label>
+                            <select id="employment_status" name="employment_status">
+                                <option value="">Select...</option>
+                                <option value="Full-time">Full-time</option>
+                                <option value="Part-time">Part-time</option>
+                                <option value="Temporary">Temporary</option>
+                                <option value="Unemployed">Unemployed</option>
+                                <option value="Disabled">Disabled</option>
+                                <option value="Retired">Retired</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="hours_per_week">Hours per Week</label>
+                            <input type="number" id="hours_per_week" name="hours_per_week">
+                        </div>
+                    </div>
+
+                    <div class="form-row two-col">
+                        <div class="form-group">
+                            <label for="monthly_income">Monthly Income</label>
+                            <input type="number" id="monthly_income" name="monthly_income" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="income_verification_date">Income Verification Date</label>
+                            <input type="date" id="income_verification_date" name="income_verification_date">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Benefits Information -->
+                <div class="section">
+                    <h2 class="section-title">Benefits Information</h2>
+                    
+                    <div class="form-group">
+                        <label>Current Benefits (Check all that apply)</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="ssi" name="benefits" value="SSI">
+                                <label for="ssi">SSI</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="ssdi" name="benefits" value="SSDI">
+                                <label for="ssdi">SSDI</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tanf" name="benefits" value="TANF">
+                                <label for="tanf">TANF</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="snap" name="benefits" value="SNAP">
+                                <label for="snap">SNAP/Food Stamps</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="medicaid" name="benefits" value="Medicaid">
+                                <label for="medicaid">Medicaid</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="medicare" name="benefits" value="Medicare">
+                                <label for="medicare">Medicare</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="housing_voucher" name="benefits" value="Housing Voucher">
+                                <label for="housing_voucher">Housing Voucher</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Healthcare Information -->
+                <div class="section">
+                    <h2 class="section-title">Healthcare Information</h2>
+                    
+                    <div class="form-row two-col">
+                        <div class="form-group">
+                            <label for="primary_care_doctor">Primary Care Doctor</label>
+                            <input type="text" id="primary_care_doctor" name="primary_care_doctor">
+                        </div>
+                        <div class="form-group">
+                            <label for="doctor_phone">Doctor Phone</label>
+                            <input type="tel" id="doctor_phone" name="doctor_phone">
+                        </div>
+                    </div>
+
+                    <div class="form-row two-col">
+                        <div class="form-group">
+                            <label for="insurance_provider">Insurance Provider</label>
+                            <input type="text" id="insurance_provider" name="insurance_provider">
+                        </div>
+                        <div class="form-group">
+                            <label for="insurance_id">Insurance ID Number</label>
+                            <input type="text" id="insurance_id" name="insurance_id">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Health Conditions (Check all that apply)</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="mental_health" name="health_conditions" value="Mental Health">
+                                <label for="mental_health">Mental Health Condition</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="substance_abuse" name="health_conditions" value="Substance Abuse">
+                                <label for="substance_abuse">Substance Abuse</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="physical_disability" name="health_conditions" value="Physical Disability">
+                                <label for="physical_disability">Physical Disability</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="chronic_illness" name="health_conditions" value="Chronic Illness">
+                                <label for="chronic_illness">Chronic Illness</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="developmental_disability" name="health_conditions" value="Developmental Disability">
+                                <label for="developmental_disability">Developmental Disability</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Emergency Contact -->
+                <div class="section">
+                    <h2 class="section-title">Emergency Contact Information</h2>
+                    
+                    <div class="form-row three-col">
+                        <div class="form-group">
+                            <label for="emergency_contact_name">Emergency Contact Name</label>
+                            <input type="text" id="emergency_contact_name" name="emergency_contact_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="emergency_contact_phone">Emergency Contact Phone</label>
+                            <input type="tel" id="emergency_contact_phone" name="emergency_contact_phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="emergency_contact_relationship">Relationship</label>
+                            <input type="text" id="emergency_contact_relationship" name="emergency_contact_relationship">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Banking & Financial -->
+                <div class="section">
+                    <h2 class="section-title">Banking & Financial Information</h2>
+                    
+                    <div class="form-row two-col">
+                        <div class="form-group">
+                            <label for="bank_name">Bank Name</label>
+                            <input type="text" id="bank_name" name="bank_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="account_type">Account Type</label>
+                            <select id="account_type" name="account_type">
+                                <option value="">Select...</option>
+                                <option value="Checking">Checking</option>
+                                <option value="Savings">Savings</option>
+                                <option value="Both">Both</option>
+                                <option value="None">No Bank Account</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transportation -->
+                <div class="section">
+                    <h2 class="section-title">Transportation</h2>
+                    
+                    <div class="form-row two-col">
+                        <div class="form-group">
+                            <label for="transportation_method">Primary Transportation</label>
+                            <select id="transportation_method" name="transportation_method">
+                                <option value="">Select...</option>
+                                <option value="Own Vehicle">Own Vehicle</option>
+                                <option value="Public Transit">Public Transit</option>
+                                <option value="Walking">Walking</option>
+                                <option value="Bicycle">Bicycle</option>
+                                <option value="Friends/Family">Friends/Family</option>
+                                <option value="Ride Share">Ride Share</option>
+                                <option value="None">No Transportation</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="drivers_license">Driver's License Status</label>
+                            <select id="drivers_license" name="drivers_license">
+                                <option value="">Select...</option>
+                                <option value="Valid License">Valid License</option>
+                                <option value="Expired License">Expired License</option>
+                                <option value="Suspended License">Suspended License</option>
+                                <option value="No License">No License</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Services Requested -->
+                <div class="section">
+                    <h2 class="section-title">Services Requested</h2>
+                    
+                    <div class="form-group">
+                        <label>Services Needed (Check all that apply)</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="rental_assistance" name="services_needed" value="Rental Assistance">
+                                <label for="rental_assistance">Rental Assistance</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="utility_assistance" name="services_needed" value="Utility Assistance">
+                                <label for="utility_assistance">Utility Assistance</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="eviction_prevention" name="services_needed" value="Eviction Prevention">
+                                <label for="eviction_prevention">Eviction Prevention</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="case_management" name="services_needed" value="Case Management">
+                                <label for="case_management">Case Management</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="job_placement" name="services_needed" value="Job Placement">
+                                <label for="job_placement">Job Placement</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="benefits_assistance" name="services_needed" value="Benefits Assistance">
+                                <label for="benefits_assistance">Benefits Assistance</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="landlord_mediation" name="services_needed" value="Landlord Mediation">
+                                <label for="landlord_mediation">Landlord Mediation</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="financial_counseling" name="services_needed" value="Financial Counseling">
+                                <label for="financial_counseling">Financial Counseling</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row two-col">
+                        <div class="form-group">
+                            <label for="urgency_level">Urgency Level</label>
+                            <select id="urgency_level" name="urgency_level">
+                                <option value="">Select...</option>
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                                <option value="Critical">Critical</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="priority_score">Priority Score (1-10)</label>
+                            <input type="number" id="priority_score" name="priority_score" min="1" max="10">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="section">
+                    <h2 class="section-title">Additional Information</h2>
+                    
+                    <div class="form-group">
+                        <label for="reason_for_services">Detailed Reason for Services</label>
+                        <textarea id="reason_for_services" name="reason_for_services" rows="4" placeholder="Describe your current housing challenges and specific needs..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="previous_services">Previous Services Received</label>
+                        <textarea id="previous_services" name="previous_services" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="barriers_challenges">Current Barriers/Challenges</label>
+                        <textarea id="barriers_challenges" name="barriers_challenges" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="goals">Housing Stability Goals</label>
+                        <textarea id="goals" name="goals" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="supporting_documents">Supporting Documents</label>
+                        <input type="file" id="supporting_documents" name="supporting_documents" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                    </div>
+                </div>
+
+                <!-- Consent -->
+                <div class="section">
+                    <h2 class="section-title">Consent & Authorization</h2>
+                    
+                    <div class="form-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="consent_services" name="consent_services" value="true">
+                            <label for="consent_services">I consent to receive housing stabilization services and case management.</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="consent_contact" name="consent_contact" value="true">
+                            <label for="consent_contact">I consent to be contacted regarding my case and services.</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="consent_information_sharing" name="consent_information_sharing" value="true">
+                            <label for="consent_information_sharing">I consent to sharing my information with partner agencies for service coordination.</label>
+                        </div>
+                    </div>
+
+                    <div class="form-row two-col">
+                        <div class="form-group">
+                            <label for="client_signature">Client Signature (Type Name)</label>
+                            <input type="text" id="client_signature" name="client_signature">
+                        </div>
+                        <div class="form-group">
+                            <label for="signature_date">Date</label>
+                            <input type="date" id="signature_date" name="signature_date">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit Complete Intake Form</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Auto-calculate age from date of birth
+        document.getElementById('date_of_birth').addEventListener('change', function() {
+            const dob = new Date(this.value);
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+            
+            document.getElementById('age').value = age > 0 ? age : '';
+        });
+
+        // Set intake date and signature date to today by default
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('intake_date').value = today;
+        document.getElementById('signature_date').value = today;
+    </script>
+</body>
+</html>
