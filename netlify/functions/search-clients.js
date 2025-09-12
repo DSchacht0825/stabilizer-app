@@ -17,6 +17,46 @@ exports.handler = async (event, context) => {
     const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 
     try {
+        // Check if environment variables are available
+        if (!supabaseUrl || !supabaseKey) {
+            // Return mock data for demo purposes
+            const mockClients = [
+                {
+                    id: 'demo-001',
+                    client_name: 'John Demo',
+                    clientName: 'John Demo',
+                    housing_stabilizer: 'Carolina',
+                    caseManager: 'Carolina',
+                    housing_location: 'Downtown',
+                    housingLocation: 'Downtown',
+                    phone_primary: '(555) 123-4567',
+                    intake_date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+                    created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+                },
+                {
+                    id: 'demo-002',
+                    client_name: 'Jane Sample',
+                    clientName: 'Jane Sample',
+                    housing_stabilizer: 'Alex',
+                    caseManager: 'Alex',
+                    housing_location: 'Hillcrest',
+                    housingLocation: 'Hillcrest',
+                    phone_primary: '(555) 234-5678',
+                    intake_date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+                    created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
+                }
+            ];
+            
+            return {
+                statusCode: 200,
+                headers,
+                body: JSON.stringify({ 
+                    success: true, 
+                    clients: mockClients,
+                    note: 'Demo data - database not configured'
+                })
+            };
+        }
         let query = '';
         let conditions = [];
         
