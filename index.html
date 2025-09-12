@@ -31,6 +31,29 @@
             padding: 25px;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .home-button {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: #1e88e5;
+            color: white;
+            padding: 10px 16px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .home-button:hover {
+            background: #1565c0;
+            text-decoration: none;
         }
 
         .logo {
@@ -184,6 +207,9 @@
 <body>
     <div class="container">
         <div class="header">
+            <a href="https://www.sdrescueoutreach.com" target="_blank" rel="noopener noreferrer" class="home-button" title="Visit SDRM Outreach Home">
+                🏠 Home
+            </a>
             <img src="https://www.sdrescue.org/wp-content/uploads/2021/06/SDRMLogo2016.svg" alt="San Diego Rescue Mission" class="logo">
             <h1>Housing Stabilization Complete Intake Form</h1>
             <p>Comprehensive client information for housing stabilization services</p>

@@ -21,12 +21,17 @@ exports.handler = async (event, context) => {
     const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 
     try {
-        const { clientId, content } = JSON.parse(event.body);
+        const { clientId, content, visitType, category, outcome, nextSteps, stabilizer, timestamp } = JSON.parse(event.body);
         
         const noteData = {
             client_id: clientId,
             content: content,
-            created_at: new Date().toISOString()
+            visit_type: visitType || 'office_visit',
+            category: category || 'general',
+            outcome: outcome || 'successful',
+            next_steps: nextSteps || '',
+            stabilizer: stabilizer || 'Unknown',
+            created_at: timestamp || new Date().toISOString()
         };
 
         const response = await fetch(

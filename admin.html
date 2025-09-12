@@ -60,10 +60,24 @@
         }
 
         .search-box {
-            display: flex;
-            gap: 15px;
             margin-bottom: 20px;
+        }
+
+        .search-row {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 1.5fr;
+            gap: 15px;
             align-items: end;
+            margin-bottom: 15px;
+        }
+
+        .search-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .search-actions {
+            display: flex;
+            gap: 10px;
         }
 
         .search-group {
@@ -85,19 +99,38 @@
             font-size: 16px;
         }
 
-        .search-box button {
-            padding: 12px 24px;
+        .search-btn {
+            padding: 12px 20px;
             background: #1e3a8a;
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
-            white-space: nowrap;
+            font-size: 14px;
+            font-weight: 600;
+            flex: 1;
+            min-width: 120px;
         }
 
-        .search-box button:hover {
+        .clear-btn {
+            padding: 12px 20px;
+            background: #6b7280;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .search-btn:hover {
             background: #1e40af;
+        }
+
+        .clear-btn:hover {
+            background: #4b5563;
         }
 
         .client-list {
@@ -223,6 +256,132 @@
         .note-content {
             color: #374151;
             line-height: 1.5;
+            margin-top: 10px;
+        }
+
+        .note-metadata {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+
+        .meta-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .meta-badge.visit-type {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .meta-badge.category {
+            background: #f3e8ff;
+            color: #7c3aed;
+        }
+
+        .meta-badge.outcome.outcome-successful {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .meta-badge.outcome.outcome-partial_progress {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .meta-badge.outcome.outcome-no_progress {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        .meta-badge.outcome.outcome-crisis {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .meta-staff {
+            font-size: 12px;
+            color: #6b7280;
+            font-style: italic;
+            margin-left: auto;
+        }
+
+        .note-next-steps {
+            background: #f0f9ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #1e40af;
+        }
+
+        .note-next-steps strong {
+            color: #1e3a8a;
+        }
+
+        .case-summary-section {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .case-summary-section h3 {
+            color: #1e3a8a;
+            margin-bottom: 20px;
+            font-size: 20px;
+            border-bottom: 2px solid #1e3a8a;
+            padding-bottom: 10px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .summary-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .summary-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .summary-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+
+        .summary-card.highlight {
+            border-color: #f59e0b;
+            background: #fffbeb;
+        }
+
+        .summary-card.highlight .summary-value {
+            color: #d97706;
         }
 
         .add-note-section {
@@ -252,6 +411,64 @@
             outline: none;
             border-color: #1e3a8a;
             box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+        }
+
+        .note-meta-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .note-field {
+            margin-bottom: 15px;
+        }
+
+        .note-field label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .note-field select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e1e5e9;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .note-field select:focus {
+            outline: none;
+            border-color: #1e3a8a;
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+        }
+
+        .note-field textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 6px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .note-field textarea:focus {
+            outline: none;
+            border-color: #1e3a8a;
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+        }
+
+        #new-note {
+            min-height: 120px;
+        }
+
+        #next-steps {
+            min-height: 80px;
         }
 
         .btn {
@@ -368,20 +585,58 @@
             <h2 style="color: #1e3a8a; margin-bottom: 20px;">Find Clients</h2>
             
             <div class="search-box">
-                <div class="search-group">
-                    <label>Search by Name or ID</label>
-                    <input type="text" id="search-input" placeholder="Enter client name or number...">
+                <div class="search-row">
+                    <div class="search-group">
+                        <label>Search by Name or ID</label>
+                        <input type="text" id="search-input" placeholder="Enter client name or number...">
+                    </div>
+                    <div class="search-group">
+                        <label>Filter by Stabilizer</label>
+                        <select id="stabilizer-filter">
+                            <option value="">All Stabilizers</option>
+                            <option value="Carolina">Carolina</option>
+                            <option value="Alex">Alex</option>
+                            <option value="Vanessa">Vanessa</option>
+                        </select>
+                    </div>
+                    <div class="search-group">
+                        <label>Filter by Location</label>
+                        <select id="location-filter">
+                            <option value="">All Locations</option>
+                            <option value="Downtown">Downtown</option>
+                            <option value="Hillcrest">Hillcrest</option>
+                            <option value="National City">National City</option>
+                            <option value="Chula Vista">Chula Vista</option>
+                            <option value="East Village">East Village</option>
+                            <option value="Unsheltered">Unsheltered</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="search-group">
-                    <label>Filter by Stabilizer</label>
-                    <select id="stabilizer-filter">
-                        <option value="">All Stabilizers</option>
-                        <option value="Carolina">Carolina</option>
-                        <option value="Alex">Alex</option>
-                        <option value="Vanessa">Vanessa</option>
-                    </select>
+                <div class="search-row">
+                    <div class="search-group">
+                        <label>Intake Date Range</label>
+                        <select id="date-filter">
+                            <option value="">All Dates</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                            <option value="quarter">Last 3 Months</option>
+                        </select>
+                    </div>
+                    <div class="search-group">
+                        <label>Sort By</label>
+                        <select id="sort-filter">
+                            <option value="recent">Most Recent</option>
+                            <option value="name">Name (A-Z)</option>
+                            <option value="name-desc">Name (Z-A)</option>
+                            <option value="stabilizer">By Stabilizer</option>
+                        </select>
+                    </div>
+                    <div class="search-group search-actions">
+                        <button onclick="searchClients()" class="search-btn">🔍 Search</button>
+                        <button onclick="clearAllFilters()" class="clear-btn">🗑️ Clear</button>
+                    </div>
                 </div>
-                <button onclick="searchClients()">Search</button>
             </div>
 
             <div class="quick-actions">
@@ -408,6 +663,37 @@
                 <!-- Client information will be populated here -->
             </div>
 
+            <!-- Case Summary Section -->
+            <div class="case-summary-section">
+                <h3>📊 Case Summary & Recent Activity</h3>
+                <div class="summary-grid" id="case-summary-grid">
+                    <div class="summary-card">
+                        <div class="summary-label">Total Interactions</div>
+                        <div class="summary-value" id="total-interactions">-</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Last Contact</div>
+                        <div class="summary-value" id="last-contact">-</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Most Recent Outcome</div>
+                        <div class="summary-value" id="recent-outcome">-</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Days Since Intake</div>
+                        <div class="summary-value" id="days-since-intake">-</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Primary Category</div>
+                        <div class="summary-value" id="primary-category">-</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Follow-up Needed</div>
+                        <div class="summary-value" id="follow-up-needed">-</div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Notes Section -->
             <div class="notes-section">
                 <h3>Meeting Notes & Case Updates</h3>
@@ -418,8 +704,66 @@
 
                 <div class="add-note-section">
                     <h4>Add New Note</h4>
-                    <textarea id="new-note" placeholder="Enter case notes, meeting summary, follow-up actions, etc..."></textarea>
-                    <button class="btn btn-primary" onclick="addNote()">Save Note</button>
+                    
+                    <div class="note-meta-row">
+                        <div class="note-field">
+                            <label for="visit-type">Visit Type</label>
+                            <select id="visit-type">
+                                <option value="office_visit">Office Visit</option>
+                                <option value="home_visit">Home Visit</option>
+                                <option value="phone_call">Phone Call</option>
+                                <option value="emergency_contact">Emergency Contact</option>
+                                <option value="follow_up">Follow-up</option>
+                                <option value="case_planning">Case Planning</option>
+                                <option value="referral">Referral/Connection</option>
+                                <option value="crisis_intervention">Crisis Intervention</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="note-field">
+                            <label for="note-category">Category</label>
+                            <select id="note-category">
+                                <option value="general">General Update</option>
+                                <option value="housing">Housing Progress</option>
+                                <option value="employment">Employment</option>
+                                <option value="healthcare">Healthcare</option>
+                                <option value="benefits">Benefits/Services</option>
+                                <option value="family">Family Situation</option>
+                                <option value="mental_health">Mental Health</option>
+                                <option value="substance_use">Substance Use</option>
+                                <option value="legal">Legal Issues</option>
+                                <option value="financial">Financial</option>
+                                <option value="transportation">Transportation</option>
+                                <option value="emergency">Emergency</option>
+                            </select>
+                        </div>
+                        
+                        <div class="note-field">
+                            <label for="visit-outcome">Outcome</label>
+                            <select id="visit-outcome">
+                                <option value="successful">Successful</option>
+                                <option value="partial_progress">Partial Progress</option>
+                                <option value="no_progress">No Progress</option>
+                                <option value="client_unavailable">Client Unavailable</option>
+                                <option value="needs_follow_up">Needs Follow-up</option>
+                                <option value="referred">Referred to Services</option>
+                                <option value="crisis">Crisis Situation</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="note-field">
+                        <label for="new-note">Notes</label>
+                        <textarea id="new-note" placeholder="Enter detailed case notes, meeting summary, actions taken, next steps, etc..."></textarea>
+                    </div>
+                    
+                    <div class="note-field">
+                        <label for="next-steps">Next Steps / Follow-up Actions</label>
+                        <textarea id="next-steps" placeholder="What needs to happen next? Any follow-up actions or appointments..."></textarea>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="addNote()">💾 Save Note</button>
                 </div>
             </div>
         </div>
@@ -441,28 +785,199 @@
             }, 5000);
         }
 
+        function sortClients(clients, sortBy) {
+            if (!clients || clients.length === 0) return clients;
+            
+            switch(sortBy) {
+                case 'name':
+                    return clients.sort((a, b) => {
+                        const nameA = (a.client_name || a.clientName || '').toLowerCase();
+                        const nameB = (b.client_name || b.clientName || '').toLowerCase();
+                        return nameA.localeCompare(nameB);
+                    });
+                case 'name-desc':
+                    return clients.sort((a, b) => {
+                        const nameA = (a.client_name || a.clientName || '').toLowerCase();
+                        const nameB = (b.client_name || b.clientName || '').toLowerCase();
+                        return nameB.localeCompare(nameA);
+                    });
+                case 'stabilizer':
+                    return clients.sort((a, b) => {
+                        const stabA = (a.housing_stabilizer || a.caseManager || '').toLowerCase();
+                        const stabB = (b.housing_stabilizer || b.caseManager || '').toLowerCase();
+                        return stabA.localeCompare(stabB);
+                    });
+                case 'oldest':
+                    return clients.sort((a, b) => new Date(a.intake_date) - new Date(b.intake_date));
+                case 'recent':
+                default:
+                    return clients.sort((a, b) => new Date(b.intake_date) - new Date(a.intake_date));
+            }
+        }
+
+        function clearAllFilters() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('stabilizer-filter').value = '';
+            document.getElementById('location-filter').value = '';
+            document.getElementById('date-filter').value = '';
+            document.getElementById('sort-filter').value = 'recent';
+            
+            // Clear the client list
+            document.getElementById('client-list').innerHTML = '<div class="empty-state">Use the filters above to search for clients.</div>';
+            
+            // Hide client details
+            document.getElementById('client-details').classList.remove('show');
+            
+            showAlert('Filters cleared');
+        }
+
+        function formatVisitType(visitType) {
+            const types = {
+                'office_visit': '🏢 Office Visit',
+                'home_visit': '🏠 Home Visit',
+                'phone_call': '📞 Phone Call',
+                'emergency_contact': '🚨 Emergency',
+                'follow_up': '📋 Follow-up',
+                'case_planning': '📊 Case Planning',
+                'referral': '🤝 Referral',
+                'crisis_intervention': '⚡ Crisis',
+                'other': '📝 Other'
+            };
+            return types[visitType] || visitType;
+        }
+
+        function formatCategory(category) {
+            const categories = {
+                'general': 'General',
+                'housing': '🏠 Housing',
+                'employment': '💼 Employment',
+                'healthcare': '⚕️ Healthcare',
+                'benefits': '💰 Benefits',
+                'family': '👨‍👩‍👧‍👦 Family',
+                'mental_health': '🧠 Mental Health',
+                'substance_use': '💊 Substance Use',
+                'legal': '⚖️ Legal',
+                'financial': '💳 Financial',
+                'transportation': '🚗 Transportation',
+                'emergency': '🚨 Emergency'
+            };
+            return categories[category] || category;
+        }
+
+        function formatOutcome(outcome) {
+            const outcomes = {
+                'successful': '✅ Successful',
+                'partial_progress': '🟡 Partial Progress',
+                'no_progress': '🔴 No Progress',
+                'client_unavailable': '📵 Unavailable',
+                'needs_follow_up': '🔄 Needs Follow-up',
+                'referred': '👥 Referred',
+                'crisis': '🚨 Crisis'
+            };
+            return outcomes[outcome] || outcome;
+        }
+
+        async function generateCaseSummary(client) {
+            try {
+                // Fetch notes for analysis
+                const response = await fetch(`/.netlify/functions/get-notes?clientId=${client.id}`);
+                const data = await response.json();
+                
+                const notes = data.success ? data.notes : [];
+                
+                // Calculate summary statistics
+                const totalInteractions = notes.length;
+                const lastContact = notes.length > 0 ? new Date(notes[0].created_at).toLocaleDateString() : 'None';
+                
+                // Calculate days since intake
+                const intakeDate = new Date(client.intake_date || client.created_at);
+                const daysSinceIntake = Math.floor((new Date() - intakeDate) / (1000 * 60 * 60 * 24));
+                
+                // Analyze recent outcome
+                const recentNote = notes[0];
+                const recentOutcome = recentNote ? formatOutcome(recentNote.outcome) : 'None';
+                
+                // Find primary category (most frequent)
+                const categoryCount = {};
+                notes.forEach(note => {
+                    const cat = note.category || 'general';
+                    categoryCount[cat] = (categoryCount[cat] || 0) + 1;
+                });
+                const primaryCategory = Object.keys(categoryCount).length > 0 
+                    ? formatCategory(Object.keys(categoryCount).reduce((a, b) => categoryCount[a] > categoryCount[b] ? a : b))
+                    : 'General';
+                
+                // Check for follow-up needs
+                const needsFollowUp = notes.some(note => 
+                    note.outcome === 'needs_follow_up' || 
+                    (note.nextSteps && note.nextSteps.trim())
+                ) ? 'Yes' : 'No';
+                
+                // Update UI
+                document.getElementById('total-interactions').textContent = totalInteractions;
+                document.getElementById('last-contact').textContent = lastContact;
+                document.getElementById('recent-outcome').textContent = recentOutcome.replace(/[^a-zA-Z\s]/g, '');
+                document.getElementById('days-since-intake').textContent = daysSinceIntake;
+                document.getElementById('primary-category').textContent = primaryCategory.replace(/[^a-zA-Z\s]/g, '');
+                document.getElementById('follow-up-needed').textContent = needsFollowUp;
+                
+                // Highlight follow-up card if needed
+                const followUpCard = document.getElementById('follow-up-needed').parentElement;
+                if (needsFollowUp === 'Yes') {
+                    followUpCard.classList.add('highlight');
+                } else {
+                    followUpCard.classList.remove('highlight');
+                }
+                
+            } catch (error) {
+                console.error('Error generating case summary:', error);
+                // Set default values on error
+                document.getElementById('total-interactions').textContent = 'Error';
+                document.getElementById('last-contact').textContent = 'Error';
+                document.getElementById('recent-outcome').textContent = 'Error';
+                document.getElementById('days-since-intake').textContent = 'Error';
+                document.getElementById('primary-category').textContent = 'Error';
+                document.getElementById('follow-up-needed').textContent = 'Error';
+            }
+        }
+
         async function searchClients() {
             const searchTerm = document.getElementById('search-input').value.trim();
             const stabilizer = document.getElementById('stabilizer-filter').value;
+            const location = document.getElementById('location-filter').value;
+            const dateFilter = document.getElementById('date-filter').value;
+            const sortBy = document.getElementById('sort-filter').value;
             
-            if (!searchTerm && !stabilizer) {
-                showAlert('Please enter a search term or select a stabilizer', 'error');
+            // Build query parameters
+            let params = new URLSearchParams();
+            if (searchTerm) params.append('search', searchTerm);
+            if (stabilizer) params.append('stabilizer', stabilizer);
+            if (location) params.append('location', location);
+            if (dateFilter) params.append('dateFilter', dateFilter);
+            if (sortBy) params.append('sortBy', sortBy);
+            
+            // If no filters, show all
+            if (!searchTerm && !stabilizer && !location && !dateFilter) {
+                await showAllClients();
                 return;
             }
 
             try {
-                let url = `/.netlify/functions/search-clients?search=${encodeURIComponent(searchTerm)}`;
-                if (stabilizer) {
-                    url += `&stabilizer=${encodeURIComponent(stabilizer)}`;
-                }
-
+                const url = `/.netlify/functions/search-clients?${params.toString()}`;
                 const response = await fetch(url);
                 const data = await response.json();
 
                 if (data.success) {
-                    displayClients(data.clients);
-                    if (data.clients.length === 0) {
+                    let clients = data.clients || [];
+                    
+                    // Apply client-side sorting if needed
+                    clients = sortClients(clients, sortBy);
+                    
+                    displayClients(clients);
+                    if (clients.length === 0) {
                         showAlert('No clients found matching your search criteria', 'error');
+                    } else {
+                        showAlert(`Found ${clients.length} client(s)`);
                     }
                 } else {
                     showAlert('Error searching clients: ' + (data.error || 'Unknown error'), 'error');
@@ -574,8 +1089,9 @@
             // Display client information
             displayClientInfo(client);
             
-            // Load notes
+            // Load notes and case summary
             loadNotes(client.id);
+            generateCaseSummary(client);
         }
 
         function displayClientInfo(client) {
@@ -690,9 +1206,30 @@
             notes.forEach(note => {
                 const noteItem = document.createElement('div');
                 noteItem.className = 'note-item';
+                
+                // Format the metadata
+                const visitType = note.visitType ? formatVisitType(note.visitType) : '';
+                const category = note.category ? formatCategory(note.category) : '';
+                const outcome = note.outcome ? formatOutcome(note.outcome) : '';
+                const stabilizer = note.stabilizer || 'Unknown Staff';
+                
+                let metadataHtml = `<div class="note-metadata">`;
+                if (visitType) metadataHtml += `<span class="meta-badge visit-type">${visitType}</span>`;
+                if (category) metadataHtml += `<span class="meta-badge category">${category}</span>`;
+                if (outcome) metadataHtml += `<span class="meta-badge outcome outcome-${note.outcome}">${outcome}</span>`;
+                metadataHtml += `<span class="meta-staff">by ${stabilizer}</span>`;
+                metadataHtml += `</div>`;
+                
+                let nextStepsHtml = '';
+                if (note.nextSteps && note.nextSteps.trim()) {
+                    nextStepsHtml = `<div class="note-next-steps"><strong>Next Steps:</strong> ${note.nextSteps}</div>`;
+                }
+                
                 noteItem.innerHTML = `
-                    <div class="note-date">${new Date(note.created_at).toLocaleString()}</div>
+                    <div class="note-date">${new Date(note.created_at || note.timestamp).toLocaleString()}</div>
+                    ${metadataHtml}
                     <div class="note-content">${note.content}</div>
+                    ${nextStepsHtml}
                 `;
                 notesHistory.appendChild(noteItem);
             });
@@ -700,27 +1237,46 @@
 
         async function addNote() {
             const noteContent = document.getElementById('new-note').value.trim();
+            const visitType = document.getElementById('visit-type').value;
+            const noteCategory = document.getElementById('note-category').value;
+            const visitOutcome = document.getElementById('visit-outcome').value;
+            const nextSteps = document.getElementById('next-steps').value.trim();
+            
             if (!noteContent || !currentClientId) {
                 showAlert('Please enter a note and select a client', 'error');
                 return;
             }
 
             try {
+                const noteData = {
+                    clientId: currentClientId,
+                    content: noteContent,
+                    visitType: visitType,
+                    category: noteCategory,
+                    outcome: visitOutcome,
+                    nextSteps: nextSteps,
+                    stabilizer: currentStabilizer || 'Unknown',
+                    timestamp: new Date().toISOString()
+                };
+
                 const response = await fetch('/.netlify/functions/add-note', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        clientId: currentClientId,
-                        content: noteContent
-                    })
+                    body: JSON.stringify(noteData)
                 });
 
                 const result = await response.json();
 
                 if (response.ok && result.success) {
+                    // Clear the form
                     document.getElementById('new-note').value = '';
+                    document.getElementById('next-steps').value = '';
+                    document.getElementById('visit-type').selectedIndex = 0;
+                    document.getElementById('note-category').selectedIndex = 0;
+                    document.getElementById('visit-outcome').selectedIndex = 0;
+                    
                     loadNotes(currentClientId);
-                    showAlert('Note added successfully');
+                    showAlert('Note added successfully with visit details');
                 } else {
                     showAlert('Error adding note: ' + (result.error || 'Unknown error'), 'error');
                 }

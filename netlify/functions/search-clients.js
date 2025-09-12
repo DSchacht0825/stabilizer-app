@@ -5,6 +5,10 @@ exports.handler = async (event, context) => {
     };
 
     const searchTerm = event.queryStringParameters?.search || '';
+    const stabilizer = event.queryStringParameters?.stabilizer || '';
+    const location = event.queryStringParameters?.location || '';
+    const dateFilter = event.queryStringParameters?.dateFilter || '';
+    const sortBy = event.queryStringParameters?.sortBy || 'recent';
     const dateField = event.queryStringParameters?.dateField || 'created_at';
     const dateFrom = event.queryStringParameters?.dateFrom || '';
     const dateTo = event.queryStringParameters?.dateTo || '';
@@ -18,10 +22,45 @@ exports.handler = async (event, context) => {
         
         // Add search term condition
         if (searchTerm) {
-            conditions.push(`or=("clientName".ilike.*${searchTerm}*,"housingLocation".ilike.*${searchTerm}*,"caseManager".ilike.*${searchTerm}*)`);
+            conditions.push(`or=("clientName".ilike.*${searchTerm}*,"housingLocation".ilike.*${searchTerm}*,"caseManager".ilike.*${searchTerm}*,"id".ilike.*${searchTerm}*)`);
         }
         
-        // Add date range conditions
+        // Add stabilizer filter
+        if (stabilizer) {
+            conditions.push(`"caseManager".ilike.*${stabilizer}*`);
+        }
+        
+        // Add location filter
+        if (location) {
+            conditions.push(`"housingLocation".ilike.*${location}*`);
+        }
+        
+        // Add date filter conditions
+        if (dateFilter) {
+            const now = new Date();
+            let fromDate;
+            
+            switch(dateFilter) {
+                case 'today':
+                    fromDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    conditions.push(`"created_at".gte.${fromDate.toISOString()}`);
+                    break;
+                case 'week':
+                    fromDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    conditions.push(`"created_at".gte.${fromDate.toISOString()}`);
+                    break;
+                case 'month':
+                    fromDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                    conditions.push(`"created_at".gte.${fromDate.toISOString()}`);
+                    break;
+                case 'quarter':
+                    fromDate = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+                    conditions.push(`"created_at".gte.${fromDate.toISOString()}`);
+                    break;
+            }
+        }
+        
+        // Add date range conditions (for backward compatibility)
         if (dateFrom) {
             conditions.push(`"${dateField}".gte.${dateFrom}`);
         }
