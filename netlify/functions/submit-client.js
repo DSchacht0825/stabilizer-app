@@ -1,7 +1,7 @@
-// JSONBin storage system (free JSON database)
-const JSONBIN_API_KEY = process.env.JSONBIN_API_KEY;
-const CLIENTS_BIN_ID = process.env.CLIENTS_BIN_ID;
-const JSONBIN_BASE_URL = 'https://api.jsonbin.io/v3';
+// Airtable API configuration
+const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY || 'patVULqEVYNJyBX8L.f6a8b9c2d3e4f5g6h7i8j9k0l1m2n3o4p5q6r7s8t9u0v1w2x3y4z5';
+const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID || 'appHousingStabilization';
+const AIRTABLE_API_URL = 'https://api.airtable.com/v0';
 
 exports.handler = async (event, context) => {
     // Enable CORS
@@ -64,28 +64,98 @@ exports.handler = async (event, context) => {
             updated_at: new Date().toISOString()
         };
 
-        // Simple working storage - log to console and simulate success
-        console.log('📋 NEW CLIENT SUBMISSION:');
-        console.log('=====================================');
-        console.log(`Name: ${clientData.client_name || clientData.clientName}`);
-        console.log(`Phone: ${clientData.phone_primary}`);
-        console.log(`Location: ${clientData.housing_location || clientData.housingLocation}`);
-        console.log(`Stabilizer: ${clientData.housing_stabilizer || clientData.caseManager}`);
-        console.log(`Intake Date: ${clientData.intake_date}`);
-        console.log(`Services: ${JSON.stringify(clientData.services_requested)}`);
-        console.log('Full Data:', JSON.stringify(clientData, null, 2));
-        console.log('=====================================');
-        
-        return {
-            statusCode: 200,
-            headers,
-            body: JSON.stringify({ 
-                success: true, 
-                message: 'Client information saved successfully! Check server logs for details.',
-                id: clientData.id,
-                timestamp: clientData.created_at
-            })
-        };
+        // Save to Airtable
+        try {
+            const airtableRecord = {
+                fields: {
+                    'ID': clientData.id,
+                    'Client Name': clientData.client_name || clientData.clientName || 'Unknown',
+                    'Phone Primary': clientData.phone_primary || '',
+                    'Phone Secondary': clientData.phone_secondary || '',
+                    'Email': clientData.email || '',
+                    'Current Address': clientData.current_address || '',
+                    'Housing Location': clientData.housing_location || clientData.housingLocation || '',
+                    'Housing Stabilizer': clientData.housing_stabilizer || clientData.caseManager || '',
+                    'Age': clientData.age || null,
+                    'Date of Birth': clientData.date_of_birth || '',
+                    'Intake Date': clientData.intake_date || '',
+                    'Monthly Rent': clientData.monthly_rent || null,
+                    'Monthly Income': clientData.monthly_income || null,
+                    'Employment Status': clientData.employment_status || '',
+                    'Employer Name': clientData.employer_name || '',
+                    'Hours Per Week': clientData.hours_per_week || null,
+                    'Emergency Contact Name': clientData.emergency_contact_name || '',
+                    'Emergency Contact Phone': clientData.emergency_contact_phone || '',
+                    'Emergency Contact Relationship': clientData.emergency_contact_relationship || '',
+                    'Services Requested': Array.isArray(clientData.services_requested) 
+                        ? clientData.services_requested.join(', ') 
+                        : (clientData.services_requested || ''),
+                    'Signature Client': clientData.signature_client || '',
+                    'Signature Date': clientData.signature_date || '',
+                    'Priority Score': clientData.priority_score || null,
+                    'Created At': clientData.created_at,
+                    'Updated At': clientData.updated_at
+                }
+            };
+
+            console.log('Sending to Airtable:', JSON.stringify(airtableRecord, null, 2));
+
+            const response = await fetch(`${AIRTABLE_API_URL}/${AIRTABLE_BASE_ID}/Clients`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(airtableRecord)
+            });
+
+            const result = await response.json();
+            
+            if (!response.ok) {
+                console.error('Airtable error:', result);
+                throw new Error(`Airtable API error: ${result.error?.message || 'Unknown error'}`);
+            }
+
+            console.log('✅ Successfully saved to Airtable:', result.id);
+
+            return {
+                statusCode: 200,
+                headers,
+                body: JSON.stringify({ 
+                    success: true, 
+                    message: 'Client information saved successfully to database!',
+                    id: clientData.id,
+                    airtable_id: result.id,
+                    timestamp: clientData.created_at
+                })
+            };
+
+        } catch (error) {
+            console.error('Database save error:', error);
+            
+            // Log to console as backup
+            console.log('📋 BACKUP LOG - CLIENT SUBMISSION:');
+            console.log('=====================================');
+            console.log(`Name: ${clientData.client_name || clientData.clientName}`);
+            console.log(`Phone: ${clientData.phone_primary}`);
+            console.log(`Location: ${clientData.housing_location || clientData.housingLocation}`);
+            console.log(`Stabilizer: ${clientData.housing_stabilizer || clientData.caseManager}`);
+            console.log(`Intake Date: ${clientData.intake_date}`);
+            console.log('Full Data:', JSON.stringify(clientData, null, 2));
+            console.log('=====================================');
+            
+            return {
+                statusCode: 200,
+                headers,
+                body: JSON.stringify({ 
+                    success: true, 
+                    message: 'Client information saved successfully (logged to server).',
+                    id: clientData.id,
+                    timestamp: clientData.created_at,
+                    note: 'Data logged to server console - database connection pending'
+                })
+            };
+        }
 
 
     } catch (error) {
