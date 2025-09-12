@@ -880,7 +880,7 @@
         async function generateCaseSummary(client) {
             try {
                 // Fetch notes for analysis
-                const response = await fetch(`/.netlify/functions/get-notes?clientId=${client.id}`);
+                const response = await fetch(`/api/get-notes?clientId=${client.id}`);
                 const data = await response.json();
                 
                 const notes = data.success ? data.notes : [];
@@ -963,7 +963,7 @@
             }
 
             try {
-                const url = `/.netlify/functions/search-clients?${params.toString()}`;
+                const url = `/api/search-clients?${params.toString()}`;
                 const response = await fetch(url);
                 const data = await response.json();
 
@@ -993,7 +993,7 @@
             oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
             
             try {
-                const response = await fetch(`/.netlify/functions/search-clients?dateFrom=${oneWeekAgo.toISOString().split('T')[0]}`);
+                const response = await fetch(`/api/search-clients?dateFrom=${oneWeekAgo.toISOString().split('T')[0]}`);
                 const data = await response.json();
 
                 if (data.success) {
@@ -1018,7 +1018,7 @@
 
         async function showAllClients() {
             try {
-                const response = await fetch('/.netlify/functions/search-clients?search=');
+                const response = await fetch('/api/search-clients?search=');
                 const data = await response.json();
 
                 if (data.success) {
@@ -1180,7 +1180,7 @@
             notesHistory.innerHTML = '<div class="loading">Loading notes...</div>';
             
             try {
-                const response = await fetch(`/.netlify/functions/get-notes?clientId=${clientId}`);
+                const response = await fetch(`/api/get-notes?clientId=${clientId}`);
                 const data = await response.json();
 
                 if (data.success) {
@@ -1259,7 +1259,7 @@
                     timestamp: new Date().toISOString()
                 };
 
-                const response = await fetch('/.netlify/functions/add-note', {
+                const response = await fetch('/api/add-note', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(noteData)

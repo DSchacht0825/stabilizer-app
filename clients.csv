@@ -1,0 +1,4 @@
+ID,Client Name,Phone Primary,Email,Housing Location,Housing Stabilizer,Current Address,Age,Monthly Income,Monthly Rent,Services Requested,Intake Date,Created At
+sample-001,John Martinez,(619) 555-0123,john.martinez@email.com,Downtown,Carolina,"123 Main St, San Diego, CA 92101",34,1800,1200,"rental assistance, job placement",2024-09-01,2024-09-01T10:00:00Z
+sample-002,Maria Rodriguez,(619) 555-0124,maria.rodriguez@email.com,Hillcrest,Alex,"456 Oak Ave, San Diego, CA 92103",28,800,1000,"eviction prevention, emergency assistance",2024-09-03,2024-09-03T14:00:00Z
+sample-003,Robert Johnson,(619) 555-0125,robert.johnson@email.com,National City,Vanessa,"789 Pine St, National City, CA 91950",45,3200,1500,"utility assistance, financial counseling",2024-08-28,2024-08-28T09:00:00Z

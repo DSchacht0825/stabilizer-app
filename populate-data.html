@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Populate Database with CSV Data</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f5f7fa;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #1e3a8a;
+            margin-bottom: 20px;
+        }
+        
+        .step {
+            margin: 20px 0;
+            padding: 20px;
+            border-left: 4px solid #1e3a8a;
+            background: #f8f9fa;
+        }
+        
+        button {
+            background: #1e3a8a;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        
+        button:hover {
+            background: #1e40af;
+        }
+        
+        button:disabled {
+            background: #6b7280;
+            cursor: not-allowed;
+        }
+        
+        .progress {
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+            height: 24px;
+        }
+        
+        .progress-bar {
+            background: #10b981;
+            height: 100%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .log {
+            background: #1f2937;
+            color: #f3f4f6;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 10px 0;
+            white-space: pre-wrap;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+        
+        .status.info {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Populate Database with Sample Data</h1>
+        
+        <div class="status info">
+            <strong>Instructions:</strong> This will add the sample clients and notes from your CSV files to the live database.
+            Make sure your site is deployed and working before running this.
+        </div>
+        
+        <div class="step">
+            <h3>Step 1: Add Sample Clients</h3>
+            <p>This will add John Martinez, Maria Rodriguez, and Robert Johnson to your database.</p>
+            <button onclick="addClients()" id="addClientsBtn">Add Sample Clients</button>
+            <div class="progress" id="clientProgress" style="display: none;">
+                <div class="progress-bar" id="clientProgressBar" style="width: 0%;">0%</div>
+            </div>
+        </div>
+        
+        <div class="step">
+            <h3>Step 2: Add Sample Notes</h3>
+            <p>This will add case notes for each client showing their progress and interactions.</p>
+            <button onclick="addNotes()" id="addNotesBtn" disabled>Add Sample Notes</button>
+            <div class="progress" id="noteProgress" style="display: none;">
+                <div class="progress-bar" id="noteProgressBar" style="width: 0%;">0%</div>
+            </div>
+        </div>
+        
+        <div class="log" id="logOutput"></div>
+        
+        <div class="step">
+            <h3>Step 3: Test the Admin Dashboard</h3>
+            <p>Once data is loaded, test the admin dashboard:</p>
+            <a href="admin.html" target="_blank">
+                <button>Open Admin Dashboard</button>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL = window.location.origin;
+        let clientIdMap = new Map();
+        
+        function log(message, type = 'info') {
+            const logOutput = document.getElementById('logOutput');
+            const timestamp = new Date().toLocaleTimeString();
+            const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+            logOutput.textContent += `[${timestamp}] ${icon} ${message}\n`;
+            logOutput.scrollTop = logOutput.scrollHeight;
+        }
+        
+        function updateProgress(progressId, barId, current, total) {
+            const progress = document.getElementById(progressId);
+            const bar = document.getElementById(barId);
+            const percentage = Math.round((current / total) * 100);
+            
+            progress.style.display = 'block';
+            bar.style.width = percentage + '%';
+            bar.textContent = `${current}/${total} (${percentage}%)`;
+        }
+        
+        const sampleClients = [
+            {
+                client_name: 'John Martinez',
+                phone_primary: '(619) 555-0123',
+                email: 'john.martinez@email.com',
+                housing_location: 'Downtown',
+                housing_stabilizer: 'Carolina',
+                current_address: '123 Main St, San Diego, CA 92101',
+                age: 34,
+                monthly_income: 1800,
+                monthly_rent: 1200,
+                services_requested: ['rental assistance', 'job placement'],
+                intake_date: '2024-09-01',
+                oldId: 'sample-001'
+            },
+            {
+                client_name: 'Maria Rodriguez',
+                phone_primary: '(619) 555-0124',
+                email: 'maria.rodriguez@email.com',
+                housing_location: 'Hillcrest',
+                housing_stabilizer: 'Alex',
+                current_address: '456 Oak Ave, San Diego, CA 92103',
+                age: 28,
+                monthly_income: 800,
+                monthly_rent: 1000,
+                services_requested: ['eviction prevention', 'emergency assistance'],
+                intake_date: '2024-09-03',
+                oldId: 'sample-002'
+            },
+            {
+                client_name: 'Robert Johnson',
+                phone_primary: '(619) 555-0125',
+                email: 'robert.johnson@email.com',
+                housing_location: 'National City',
+                housing_stabilizer: 'Vanessa',
+                current_address: '789 Pine St, National City, CA 91950',
+                age: 45,
+                monthly_income: 3200,
+                monthly_rent: 1500,
+                services_requested: ['utility assistance', 'financial counseling'],
+                intake_date: '2024-08-28',
+                oldId: 'sample-003'
+            }
+        ];
+        
+        const sampleNotes = [
+            {
+                oldClientId: 'sample-001',
+                content: 'Initial intake meeting completed with John Martinez. Client is motivated and engaged in services. Discussed current housing situation - he is behind on rent by 2 months.',
+                visitType: 'office_visit',
+                category: 'housing',
+                outcome: 'successful',
+                nextSteps: 'Apply for emergency rental assistance through County program. Schedule follow-up appointment for next week.',
+                stabilizer: 'Carolina'
+            },
+            {
+                oldClientId: 'sample-001',
+                content: 'Phone check-in with John. Rental assistance application submitted successfully. Landlord has agreed to payment plan. Client expressed relief and gratitude.',
+                visitType: 'phone_call',
+                category: 'housing',
+                outcome: 'successful',
+                nextSteps: 'Follow up on application status in one week. Continue job search assistance.',
+                stabilizer: 'Carolina'
+            },
+            {
+                oldClientId: 'sample-002',
+                content: 'Home visit with Maria Rodriguez. Found client in stable temporary housing with family. Discussed eviction notice received last week. Client is overwhelmed but willing to engage.',
+                visitType: 'home_visit',
+                category: 'housing',
+                outcome: 'needs_follow_up',
+                nextSteps: 'Connect with legal aid for eviction defense. Apply for emergency assistance funds.',
+                stabilizer: 'Alex'
+            },
+            {
+                oldClientId: 'sample-002',
+                content: 'Emergency contact - Maria called distressed about court date next week. Provided emotional support and reviewed legal aid appointment details.',
+                visitType: 'emergency_contact',
+                category: 'legal',
+                outcome: 'crisis',
+                nextSteps: 'Accompany client to legal aid appointment tomorrow. Check on mental health resources.',
+                stabilizer: 'Alex'
+            },
+            {
+                oldClientId: 'sample-003',
+                content: 'Office visit with Robert Johnson. Discussed utility shut-off notice. Client is employed full-time but struggling with medical bills from recent surgery.',
+                visitType: 'office_visit',
+                category: 'financial',
+                outcome: 'partial_progress',
+                nextSteps: 'Apply for utility assistance program. Refer to financial counselor for budget planning.',
+                stabilizer: 'Vanessa'
+            }
+        ];
+        
+        async function addClients() {
+            const btn = document.getElementById('addClientsBtn');
+            btn.disabled = true;
+            btn.textContent = 'Adding Clients...';
+            
+            log('Starting to add sample clients...');
+            
+            for (let i = 0; i < sampleClients.length; i++) {
+                const client = sampleClients[i];
+                const { oldId, ...clientData } = client;
+                
+                try {
+                    const response = await fetch(`${BASE_URL}/api/submit-client`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(clientData)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        clientIdMap.set(oldId, result.id);
+                        log(`Added client: ${client.client_name}`, 'success');
+                    } else {
+                        log(`Failed to add client ${client.client_name}: ${result.error}`, 'error');
+                    }
+                } catch (error) {
+                    log(`Error adding client ${client.client_name}: ${error.message}`, 'error');
+                }
+                
+                updateProgress('clientProgress', 'clientProgressBar', i + 1, sampleClients.length);
+                await new Promise(resolve => setTimeout(resolve, 500)); // Small delay
+            }
+            
+            log('Finished adding clients!', 'success');
+            btn.textContent = 'Clients Added ✅';
+            document.getElementById('addNotesBtn').disabled = false;
+        }
+        
+        async function addNotes() {
+            const btn = document.getElementById('addNotesBtn');
+            btn.disabled = true;
+            btn.textContent = 'Adding Notes...';
+            
+            log('Starting to add sample notes...');
+            
+            for (let i = 0; i < sampleNotes.length; i++) {
+                const note = sampleNotes[i];
+                const clientId = clientIdMap.get(note.oldClientId);
+                
+                if (!clientId) {
+                    log(`Skipping note - client ${note.oldClientId} not found`, 'error');
+                    continue;
+                }
+                
+                const noteData = {
+                    clientId: clientId,
+                    content: note.content,
+                    visitType: note.visitType,
+                    category: note.category,
+                    outcome: note.outcome,
+                    nextSteps: note.nextSteps,
+                    stabilizer: note.stabilizer
+                };
+                
+                try {
+                    const response = await fetch(`${BASE_URL}/api/add-note`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(noteData)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        log(`Added note for client ${note.oldClientId}`, 'success');
+                    } else {
+                        log(`Failed to add note: ${result.error}`, 'error');
+                    }
+                } catch (error) {
+                    log(`Error adding note: ${error.message}`, 'error');
+                }
+                
+                updateProgress('noteProgress', 'noteProgressBar', i + 1, sampleNotes.length);
+                await new Promise(resolve => setTimeout(resolve, 500)); // Small delay
+            }
+            
+            log('Finished adding notes!', 'success');
+            log('🎉 Database population complete! You can now test the admin dashboard.', 'success');
+            btn.textContent = 'Notes Added ✅';
+        }
+        
+        // Initialize
+        log('Ready to populate database with sample data.');
+        log('Click "Add Sample Clients" to get started.');
+    </script>
+</body>
+</html>
