@@ -1,0 +1,8 @@
+name = "housing-stabilization-api"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "housing-stabilization-db"
+database_id = "479a8a6a-0bb5-4dd3-9321-94c07da014db"

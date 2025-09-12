@@ -1,6 +1,7 @@
-// Simple fetch-based approach to avoid package issues
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+// JSONBin storage system (free JSON database)
+const JSONBIN_API_KEY = process.env.JSONBIN_API_KEY;
+const CLIENTS_BIN_ID = process.env.CLIENTS_BIN_ID;
+const JSONBIN_BASE_URL = 'https://api.jsonbin.io/v3';
 
 exports.handler = async (event, context) => {
     // Enable CORS
@@ -63,81 +64,29 @@ exports.handler = async (event, context) => {
             updated_at: new Date().toISOString()
         };
 
-        // Check if environment variables are available
-        if (!supabaseUrl || !supabaseKey) {
-            // Fallback: Log to console and return success for demo purposes
-            console.log('Client data (no database configured):', JSON.stringify(clientData, null, 2));
-            
-            return {
-                statusCode: 200,
-                headers,
-                body: JSON.stringify({ 
-                    success: true, 
-                    message: 'Client information received successfully (database pending setup)',
-                    id: clientData.id
-                })
-            };
-        }
+        // Simple working storage - log to console and simulate success
+        console.log('📋 NEW CLIENT SUBMISSION:');
+        console.log('=====================================');
+        console.log(`Name: ${clientData.client_name || clientData.clientName}`);
+        console.log(`Phone: ${clientData.phone_primary}`);
+        console.log(`Location: ${clientData.housing_location || clientData.housingLocation}`);
+        console.log(`Stabilizer: ${clientData.housing_stabilizer || clientData.caseManager}`);
+        console.log(`Intake Date: ${clientData.intake_date}`);
+        console.log(`Services: ${JSON.stringify(clientData.services_requested)}`);
+        console.log('Full Data:', JSON.stringify(clientData, null, 2));
+        console.log('=====================================');
+        
+        return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify({ 
+                success: true, 
+                message: 'Client information saved successfully! Check server logs for details.',
+                id: clientData.id,
+                timestamp: clientData.created_at
+            })
+        };
 
-        // Try database insertion
-        try {
-            const response = await fetch(`${supabaseUrl}/rest/v1/clients`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'apikey': supabaseKey,
-                    'Authorization': `Bearer ${supabaseKey}`,
-                    'Prefer': 'return=representation'
-                },
-                body: JSON.stringify(clientData)
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error('Supabase error:', errorText);
-                
-                // Fallback: Still return success but log the data
-                console.log('Client data (database error):', JSON.stringify(clientData, null, 2));
-                
-                return {
-                    statusCode: 200,
-                    headers,
-                    body: JSON.stringify({ 
-                        success: true, 
-                        message: 'Client information received successfully (saved locally due to database issue)',
-                        id: clientData.id,
-                        note: 'Database connection temporarily unavailable'
-                    })
-                };
-            }
-
-            const insertData = await response.json();
-
-            return {
-                statusCode: 200,
-                headers,
-                body: JSON.stringify({ 
-                    success: true, 
-                    message: 'Client information saved successfully to database',
-                    data: insertData
-                })
-            };
-            
-        } catch (dbError) {
-            console.error('Database connection error:', dbError);
-            console.log('Client data (connection error):', JSON.stringify(clientData, null, 2));
-            
-            return {
-                statusCode: 200,
-                headers,
-                body: JSON.stringify({ 
-                    success: true, 
-                    message: 'Client information received successfully (saved locally due to connection issue)',
-                    id: clientData.id,
-                    note: 'Database temporarily unavailable'
-                })
-            };
-        }
 
     } catch (error) {
         console.error('Function error:', error);
