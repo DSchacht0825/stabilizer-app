@@ -643,6 +643,7 @@
                 <button onclick="showRecentClients()" class="btn-quick">Recent Clients (7 days)</button>
                 <button onclick="showMyClients()" class="btn-quick">My Active Cases</button>
                 <button onclick="showAllClients()" class="btn-quick">All Clients</button>
+                <button onclick="addNewClient()" class="btn-quick" style="background: #059669;">➕ Add New Client</button>
             </div>
 
             <div class="client-list" id="client-list">
@@ -1299,6 +1300,10 @@
                 searchClients();
             }
         });
+
+        function addNewClient() {
+            window.open('/', '_blank');
+        }
     </script>
 </body>
 </html>
