@@ -567,6 +567,90 @@
         .btn-quick:hover {
             background: #4b5563;
         }
+
+        .edit-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f0f9ff;
+            border-radius: 8px;
+            border: 2px solid #bae6fd;
+        }
+
+        .btn-edit {
+            background: #0891b2;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-edit:hover {
+            background: #0e7490;
+        }
+
+        .btn-save {
+            background: #059669;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-save:hover {
+            background: #047857;
+        }
+
+        .btn-cancel {
+            background: #6b7280;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel:hover {
+            background: #4b5563;
+        }
+
+        .detail-value input,
+        .detail-value select,
+        .detail-value textarea {
+            width: 100%;
+            padding: 6px 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+            display: none;
+        }
+
+        .editing .detail-value input,
+        .editing .detail-value select,
+        .editing .detail-value textarea {
+            display: block;
+        }
+
+        .editing .detail-value span {
+            display: none;
+        }
+
+        .detail-value {
+            position: relative;
+        }
     </style>
 </head>
 <body>
@@ -658,6 +742,12 @@
             <div class="details-header">
                 <h2 id="client-name-header">Client Details</h2>
                 <p id="client-id-header"></p>
+            </div>
+
+            <div class="edit-actions" id="edit-actions">
+                <button class="btn-edit" id="btn-toggle-edit" onclick="toggleEditMode()">✏️ Edit Client Information</button>
+                <button class="btn-save" id="btn-save-changes" onclick="saveClientChanges()" style="display: none;">💾 Save Changes</button>
+                <button class="btn-cancel" id="btn-cancel-edit" onclick="cancelEdit()" style="display: none;">❌ Cancel</button>
             </div>
 
             <div class="details-grid" id="client-info-grid">
@@ -777,6 +867,8 @@
     <script>
         let currentClientId = null;
         let currentStabilizer = null;
+        let currentClient = null;
+        let isEditMode = false;
 
         function showAlert(message, type = 'success') {
             const alertBox = document.getElementById('alert-box');
@@ -1070,26 +1162,32 @@
         function selectClient(client) {
             currentClientId = client.id;
             currentStabilizer = client.housing_stabilizer || client.caseManager;
-            
+            currentClient = client;
+
+            // Exit edit mode if active
+            if (isEditMode) {
+                cancelEdit();
+            }
+
             // Remove previous selection
             document.querySelectorAll('.client-item').forEach(item => {
                 item.classList.remove('selected');
             });
-            
+
             // Mark current selection
             event.target.classList.add('selected');
-            
+
             // Show client details
             const detailsSection = document.getElementById('client-details');
             detailsSection.classList.add('show');
-            
+
             // Update header
             document.getElementById('client-name-header').textContent = client.client_name || client.clientName || 'Unknown Client';
             document.getElementById('client-id-header').textContent = `Client ID: ${client.id} | Stabilizer: ${currentStabilizer || 'Not assigned'}`;
-            
+
             // Display client information
             displayClientInfo(client);
-            
+
             // Load notes and case summary
             loadNotes(client.id);
             generateCaseSummary(client);
@@ -1102,75 +1200,128 @@
                     <h3>Contact Information</h3>
                     <div class="detail-item">
                         <span class="detail-label">Primary Phone:</span>
-                        <span class="detail-value">${client.phone_primary || 'N/A'}</span>
+                        <div class="detail-value">
+                            <span>${client.phone_primary || 'N/A'}</span>
+                            <input type="tel" data-field="phone_primary" value="${client.phone_primary || ''}" />
+                        </div>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Email:</span>
-                        <span class="detail-value">${client.email || 'N/A'}</span>
+                        <div class="detail-value">
+                            <span>${client.email || 'N/A'}</span>
+                            <input type="email" data-field="email" value="${client.email || ''}" />
+                        </div>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Address:</span>
-                        <span class="detail-value">${client.current_address || 'N/A'}</span>
+                        <div class="detail-value">
+                            <span>${client.current_address || 'N/A'}</span>
+                            <textarea data-field="current_address" rows="2">${client.current_address || ''}</textarea>
+                        </div>
                     </div>
                 </div>
-                
+
                 <div class="detail-section">
                     <h3>Housing Details</h3>
                     <div class="detail-item">
                         <span class="detail-label">Location:</span>
-                        <span class="detail-value">${client.housing_location || client.housingLocation || 'N/A'}</span>
+                        <div class="detail-value">
+                            <span>${client.housing_location || client.housingLocation || 'N/A'}</span>
+                            <input type="text" data-field="housing_location" value="${client.housing_location || client.housingLocation || ''}" />
+                        </div>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Monthly Rent:</span>
-                        <span class="detail-value">$${client.monthly_rent || client.rentAmount || 'N/A'}</span>
+                        <div class="detail-value">
+                            <span>$${client.monthly_rent || client.rentAmount || 'N/A'}</span>
+                            <input type="number" data-field="monthly_rent" step="0.01" value="${client.monthly_rent || client.rentAmount || ''}" />
+                        </div>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Landlord:</span>
-                        <span class="detail-value">${client.landlord_name || client.landlordName || 'N/A'}</span>
+                        <div class="detail-value">
+                            <span>${client.landlord_name || client.landlordName || 'N/A'}</span>
+                            <input type="text" data-field="landlord_name" value="${client.landlord_name || client.landlordName || ''}" />
+                        </div>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Landlord Phone:</span>
-                        <span class="detail-value">${client.landlord_phone || client.landlordContact || 'N/A'}</span>
+                        <div class="detail-value">
+                            <span>${client.landlord_phone || client.landlordContact || 'N/A'}</span>
+                            <input type="tel" data-field="landlord_phone" value="${client.landlord_phone || client.landlordContact || ''}" />
+                        </div>
                     </div>
                 </div>
-                
+
                 <div class="detail-section">
                     <h3>Employment & Income</h3>
                     <div class="detail-item">
                         <span class="detail-label">Employer:</span>
-                        <span class="detail-value">${client.employer_name || 'N/A'}</span>
+                        <div class="detail-value">
+                            <span>${client.employer_name || 'N/A'}</span>
+                            <input type="text" data-field="employer_name" value="${client.employer_name || ''}" />
+                        </div>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Employment Status:</span>
-                        <span class="detail-value">${client.employment_status || client.workStatus || 'N/A'}</span>
+                        <div class="detail-value">
+                            <span>${client.employment_status || client.workStatus || 'N/A'}</span>
+                            <select data-field="employment_status">
+                                <option value="">Select...</option>
+                                <option value="Full-time" ${(client.employment_status || client.workStatus) === 'Full-time' ? 'selected' : ''}>Full-time</option>
+                                <option value="Part-time" ${(client.employment_status || client.workStatus) === 'Part-time' ? 'selected' : ''}>Part-time</option>
+                                <option value="Temporary" ${(client.employment_status || client.workStatus) === 'Temporary' ? 'selected' : ''}>Temporary</option>
+                                <option value="Unemployed" ${(client.employment_status || client.workStatus) === 'Unemployed' ? 'selected' : ''}>Unemployed</option>
+                                <option value="Disabled" ${(client.employment_status || client.workStatus) === 'Disabled' ? 'selected' : ''}>Disabled</option>
+                                <option value="Retired" ${(client.employment_status || client.workStatus) === 'Retired' ? 'selected' : ''}>Retired</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Monthly Income:</span>
-                        <span class="detail-value">$${client.monthly_income || 'N/A'}</span>
+                        <div class="detail-value">
+                            <span>$${client.monthly_income || 'N/A'}</span>
+                            <input type="number" data-field="monthly_income" step="0.01" value="${client.monthly_income || ''}" />
+                        </div>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Benefits:</span>
-                        <span class="detail-value">${client.benefits || 'N/A'}</span>
+                        <div class="detail-value">
+                            <span>${client.benefits || 'N/A'}</span>
+                            <input type="text" data-field="benefits" value="${client.benefits || ''}" />
+                        </div>
                     </div>
                 </div>
-                
+
                 <div class="detail-section">
                     <h3>Important Dates</h3>
                     <div class="detail-item">
                         <span class="detail-label">Intake Date:</span>
-                        <span class="detail-value">${client.intake_date ? new Date(client.intake_date).toLocaleDateString() : 'N/A'}</span>
+                        <div class="detail-value">
+                            <span>${client.intake_date ? new Date(client.intake_date).toLocaleDateString() : 'N/A'}</span>
+                            <input type="date" data-field="intake_date" value="${client.intake_date || ''}" />
+                        </div>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Move-in Date:</span>
-                        <span class="detail-value">${client.moveInDate ? new Date(client.moveInDate).toLocaleDateString() : 'N/A'}</span>
+                        <div class="detail-value">
+                            <span>${client.moveInDate ? new Date(client.moveInDate).toLocaleDateString() : 'N/A'}</span>
+                            <input type="date" data-field="moveInDate" value="${client.moveInDate || ''}" />
+                        </div>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Lease End:</span>
-                        <span class="detail-value">${client.lease_end_date || client.leaseEndDate ? new Date(client.lease_end_date || client.leaseEndDate).toLocaleDateString() : 'N/A'}</span>
+                        <div class="detail-value">
+                            <span>${client.lease_end_date || client.leaseEndDate ? new Date(client.lease_end_date || client.leaseEndDate).toLocaleDateString() : 'N/A'}</span>
+                            <input type="date" data-field="lease_end_date" value="${client.lease_end_date || client.leaseEndDate || ''}" />
+                        </div>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Next Review:</span>
-                        <span class="detail-value">${client.next_review_date ? new Date(client.next_review_date).toLocaleDateString() : 'N/A'}</span>
+                        <div class="detail-value">
+                            <span>${client.next_review_date ? new Date(client.next_review_date).toLocaleDateString() : 'N/A'}</span>
+                            <input type="date" data-field="next_review_date" value="${client.next_review_date || ''}" />
+                        </div>
                     </div>
                 </div>
             `;
@@ -1303,6 +1454,131 @@
 
         function addNewClient() {
             window.open('/', '_blank');
+        }
+
+        function toggleEditMode() {
+            isEditMode = true;
+            const grid = document.getElementById('client-info-grid');
+            grid.classList.add('editing');
+
+            // Show/hide buttons
+            document.getElementById('btn-toggle-edit').style.display = 'none';
+            document.getElementById('btn-save-changes').style.display = 'inline-block';
+            document.getElementById('btn-cancel-edit').style.display = 'inline-block';
+
+            showAlert('Edit mode enabled. Make your changes and click Save Changes.', 'success');
+        }
+
+        function cancelEdit() {
+            isEditMode = false;
+            const grid = document.getElementById('client-info-grid');
+            grid.classList.remove('editing');
+
+            // Show/hide buttons
+            document.getElementById('btn-toggle-edit').style.display = 'inline-block';
+            document.getElementById('btn-save-changes').style.display = 'none';
+            document.getElementById('btn-cancel-edit').style.display = 'none';
+
+            // Refresh the display with original data
+            if (currentClient) {
+                displayClientInfo(currentClient);
+            }
+
+            showAlert('Edit mode cancelled', 'success');
+        }
+
+        async function saveClientChanges() {
+            if (!currentClientId) {
+                showAlert('No client selected', 'error');
+                return;
+            }
+
+            try {
+                // Collect all edited values
+                const updatedData = { id: currentClientId };
+                const inputs = document.querySelectorAll('#client-info-grid [data-field]');
+
+                inputs.forEach(input => {
+                    const field = input.getAttribute('data-field');
+                    let value = input.value;
+
+                    // Only include non-empty values
+                    if (value && value.trim() !== '') {
+                        updatedData[field] = value;
+                    }
+                });
+
+                // Show loading state
+                const saveBtn = document.getElementById('btn-save-changes');
+                const originalText = saveBtn.textContent;
+                saveBtn.textContent = 'Saving...';
+                saveBtn.disabled = true;
+
+                // Send update request
+                const response = await fetch('/api/update-client', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    // Update currentClient with new data
+                    Object.assign(currentClient, updatedData);
+
+                    // Exit edit mode
+                    isEditMode = false;
+                    const grid = document.getElementById('client-info-grid');
+                    grid.classList.remove('editing');
+
+                    // Show/hide buttons
+                    document.getElementById('btn-toggle-edit').style.display = 'inline-block';
+                    document.getElementById('btn-save-changes').style.display = 'none';
+                    document.getElementById('btn-cancel-edit').style.display = 'none';
+
+                    // Refresh display with updated data
+                    displayClientInfo(currentClient);
+
+                    showAlert('Client information updated successfully!', 'success');
+
+                    // Add a note about the update
+                    const noteData = {
+                        clientId: currentClientId,
+                        content: `Client information updated: ${Object.keys(updatedData).filter(k => k !== 'id').join(', ')}`,
+                        visitType: 'case_planning',
+                        category: 'general',
+                        outcome: 'successful',
+                        nextSteps: 'Continue building housing plan',
+                        stabilizer: currentStabilizer || 'System',
+                        timestamp: new Date().toISOString()
+                    };
+
+                    await fetch('/api/add-note', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(noteData)
+                    });
+
+                    // Reload notes to show the update note
+                    loadNotes(currentClientId);
+                } else {
+                    showAlert('Error updating client: ' + (result.error || 'Unknown error'), 'error');
+                }
+
+                // Reset button
+                saveBtn.textContent = originalText;
+                saveBtn.disabled = false;
+
+            } catch (error) {
+                showAlert('Error saving changes: ' + error.message, 'error');
+                console.error('Save error:', error);
+
+                // Reset button
+                const saveBtn = document.getElementById('btn-save-changes');
+                saveBtn.textContent = '💾 Save Changes';
+                saveBtn.disabled = false;
+            }
         }
     </script>
 </body>
